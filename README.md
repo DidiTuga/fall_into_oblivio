@@ -54,3 +54,12 @@ da sua implementação) e dediquem-lhe um pequeno intervalo de tempo na apresent
 * Gerar varios pins com 4 digitos para tentar o pin
 
 Apresentação-Point 8
+
+## DISTRIBUIÇÃO DE TAREFAS:
+TIAGO: 5
+Luis sá: 2
+Diogo: 1, 7
+Luis Santos:  3
+Xavier: 4
+6 para o fim
+8 toda a gente

@@ -27,3 +27,6 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+### pasta de arquivos e tudo lá dentro ###
+FALL-INTO-OBLIVION/*
