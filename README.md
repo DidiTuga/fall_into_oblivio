@@ -26,9 +26,8 @@ Code (MAC) ou uma assinatura digital do ficheiro. A chave usada para cifrar o fi
 
 ## Funcionalidades Minimas
 
-- [ ]  Permitir cifrar ficheiros, guardando o resultado numa pasta chamada
-FALL-INTO-OBLIVION; (explorar diferentes tipos de cifra); 1
-- [ ]  calcular o valor de hash do ficheiro, guardando também o resultado junto com o criptograma (em ficheiros separados) (explorar diferentes valores de hash) 1.5
+- [x]  Permitir cifrar ficheiros, guardando o resultado numa pasta chamada FALL-INTO-OBLIVION; (explorar diferentes tipos de cifra); 1
+- [x]  calcular o valor de hash do ficheiro, guardando também o resultado junto com o criptograma (em ficheiros separados) (explorar diferentes valores de hash) 1.5
 - [x]  gerar automaticamente um PIN, e usá-lo como chave para cifrar cada ficheiro;
 - [ ]  calcular o MAC dos criptogramas; 2
 - [ ]  permitir decifrar o ficheiro por via da adivinhação do PIN. Só devem ser permitidas até 3 tentativas; 3
