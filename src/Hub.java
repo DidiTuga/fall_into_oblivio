@@ -24,7 +24,7 @@ public class hub extends JFrame {
             file.mkdir();
         }
 
-
+        //a serio?
         atualizaLista(file);
 
         setContentPane(hubInicial);
