@@ -16,15 +16,23 @@ Os ficheiros devem ter, **contudo**, ter uma nomenclatura semelhante à que se 
 A aplicação a desenvolver deve estar constantemente a monitorizar uma pasta chamada FALL-INTO-OBLIVION, e cifrar automaticamente todos os ficheiros que aí forem colocados. Deve também calcular um valor resumo, um Message Authentication
 Code (MAC) ou uma assinatura digital do ficheiro. A chave usada para cifrar o ficheiro e calcular o MAC deve ser gerada automaticamente para cada ficheiro, mas derivada de um Personal Identification Number (PIN) de 3 ou 4 dígitos. Se um utilizador desejar reaver o seu ficheiro mais tarde, tem de adivinhar o código com que foi cifrado e autenticado. Tem 3 hipóteses para conseguir decifrar o ficheiro. Depois dessas 3 tentativas, o ficheiro deve ser eliminado do sistema operativo.
 
+## Interface gráfica 5
+- sistema de login;
+- listar pasta FALL-INTO-OBLIVION;
+- janela para output do conteúdo do ficheiro;
+- botões intuitivos com as diversas funcionalidades.
+- permitir gerar um novo pin.
+- help bar
+
 ## Funcionalidades Minimas
 
 - [ ]  Permitir cifrar ficheiros, guardando o resultado numa pasta chamada
-FALL-INTO-OBLIVION;
-- [ ]  calcular o valor de hash do ficheiro, guardando também o resultado junto com o criptograma (em ficheiros separados)
+FALL-INTO-OBLIVION; (explorar diferentes tipos de cifra); 1
+- [ ]  calcular o valor de hash do ficheiro, guardando também o resultado junto com o criptograma (em ficheiros separados) (explorar diferentes valores de hash) 1.5
 - [x]  gerar automaticamente um PIN, e usá-lo como chave para cifrar cada ficheiro;
-- [ ]  calcular o MAC dos criptogramas;
-- [ ]  permitir decifrar o ficheiro por via da adivinhação do PIN. Só devem ser permitidas até 3 tentativas;
-- [ ]  verificar a integridade do ficheiro no caso do PIN ter sido adivinhado.
+- [ ]  calcular o MAC dos criptogramas; 2
+- [ ]  permitir decifrar o ficheiro por via da adivinhação do PIN. Só devem ser permitidas até 3 tentativas; 3
+- [ ]  verificar a integridade do ficheiro no caso do PIN ter sido adivinhado. 3
 
 Pode correr em modo modo Client Line Interface (CLI) ou em modo gráfico (fica ao
 critério dos executantes).
@@ -34,13 +42,15 @@ Devem usar cifras e mecanismos de autenticação de mensagens de qualidade (e.g.
 ## Funcionalidades adicionais
 
 - [ ]  substituir os MACs por assinaturas digitais (o programa deve então também permitir
-gerar as chaves pública e privadas);
-- [ ]  permitir que o utilizador escolha a cifra a utilizar e o comprimento da chave de cifra;
-- [ ]  permitir que o utilizador escolha a função de hash a usar;
-- [ ]  ter um help completo e intuitivo.
+gerar as chaves pública e privadas); 4
+- [ ]  permitir que o utilizador escolha a cifra a utilizar e o comprimento da chave de cifra; 7
+- [ ]  permitir que o utilizador escolha a função de hash a usar; 7
+- [ ]  ter um help completo e intuitivo. 5
 
 Pensem numa forma de atacar o sistema (uma falha
 da sua implementação) e dediquem-lhe um pequeno intervalo de tempo na apresentação
 
-## Fazer um programa de ataque para o login e pin
+## Fazer um programa de ataque para o login e pin 6
 * Gerar varios pins com 4 digitos para tentar o pin
+
+Apresentação-Point 8
