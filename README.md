@@ -21,7 +21,7 @@ Code (MAC) ou uma assinatura digital do ficheiro. A chave usada para cifrar o fi
 - [ ]  Permitir cifrar ficheiros, guardando o resultado numa pasta chamada
 FALL-INTO-OBLIVION;
 - [ ]  calcular o valor de hash do ficheiro, guardando também o resultado junto com o criptograma (em ficheiros separados)
-- [ ]  gerar automaticamente um PIN, e usá-lo como chave para cifrar cada ficheiro;
+- [x]  gerar automaticamente um PIN, e usá-lo como chave para cifrar cada ficheiro;
 - [ ]  calcular o MAC dos criptogramas;
 - [ ]  permitir decifrar o ficheiro por via da adivinhação do PIN. Só devem ser permitidas até 3 tentativas;
 - [ ]  verificar a integridade do ficheiro no caso do PIN ter sido adivinhado.
@@ -41,3 +41,6 @@ gerar as chaves pública e privadas);
 
 Pensem numa forma de atacar o sistema (uma falha
 da sua implementação) e dediquem-lhe um pequeno intervalo de tempo na apresentação
+
+## Fazer um programa de ataque para o login e pin
+* Gerar varios pins com 4 digitos para tentar o pin
