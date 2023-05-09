@@ -16,6 +16,8 @@ public class hub extends JFrame {
     private JList list_ficheiros;
     private JScrollPane Scl_Pane;
 
+    private Integer contador = 0;
+
     public hub() {
         String[] valor_selecionado = new String[1];
         // criar uma pasta chamada "pasta1"
@@ -86,6 +88,24 @@ public class hub extends JFrame {
         });
 
         Btn_decipher.addActionListener(e -> {
+           //-----LUIS-----
+            //PERMITIR DECIFRAR O FICHEIRO POR UMA ADVINHAÇÃO DO PIN
+            //SO DEVEM SER PERMITIDAS ATE 3 TENTATIVAS
+            //SE O PIN FOR INCORRETO 3 VEZES, O FICHEIRO DEVE SER APAGADO -- VERIFICAR ENUNCIADO
+            //----------------
+            // VERIFICAR INTEGRIDADE DO FICHEIRO
+
+            while (!JOptionPane.showInputDialog("Insira o pin:").equals(pin)) {
+                contador++;
+                JOptionPane.showMessageDialog(null, "Pin incorreto!");
+
+                if (contador == 3) {
+                    JOptionPane.showMessageDialog(null, "Numero de tentativas excedido!");
+                    //delete the file
+                    return;
+                }
+                return;
+            }
             File ficheiro = new File("FALL-INTO-OBLIVION/" + valor_selecionado[0]);
             String novoNome = ficheiro.getName();
             // tirar a extensao do ficheiro

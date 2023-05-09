@@ -67,17 +67,17 @@ public class CipherUtil {
 
     }
 
-    private static String hashFile(FileInputStream inputFile, String algorithm){
+    private static String hashFile(FileInputStream inputFile, String algorithm) {
         String hash = new String();
-        try{
+        try {
             MessageDigest md = MessageDigest.getInstance(algorithm);
             byte messageDigest[] = md.digest(inputFile.readAllBytes());
             StringBuilder sb = new StringBuilder();
-            for(byte b : messageDigest){
+            for (byte b : messageDigest) {
                 sb.append(String.format("%02x", b));
             }
             hash = sb.toString();
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
 
@@ -86,6 +86,7 @@ public class CipherUtil {
 
     // Decrypt a file
     public static void decryptFile(String password, String salt, File inputFile, File outputFile, IvParameterSpec iv) {
+
         try {
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             cipher.init(Cipher.DECRYPT_MODE, getKeyFromPassword(password, salt), iv);
@@ -107,5 +108,7 @@ public class CipherUtil {
         } catch (Exception e) {
             System.out.println(e);
         }
+
+
     }
 }
