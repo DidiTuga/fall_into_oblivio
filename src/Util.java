@@ -13,7 +13,7 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 
-public class CipherUtil {
+public class Util {
     // Generate a 256-bit key from a password and a salt
     public static SecretKey getKeyFromPassword(String password, String salt)
             throws NoSuchAlgorithmException, InvalidKeySpecException {
@@ -48,7 +48,7 @@ public class CipherUtil {
             if (outputBytes != null)
                 outputStream.write(outputBytes);
             // calcula o hash do arquivo original
-            String hash = CipherUtil.hashFile(inputStream, "SHA-256");
+            String hash = Util.hashFile(inputStream, "SHA-256");
             // escreve o hash no arquivo criptografado
             String hashFileName = outputFile.getAbsolutePath().substring(0, outputFile.getAbsolutePath().lastIndexOf(".")) + ".hash";
             File hashFile = new File(hashFileName);
