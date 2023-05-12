@@ -102,6 +102,11 @@ public class Util {
             byte[] outputBytes = cipher.doFinal();
             if (outputBytes != null)
                 outputStream.write(outputBytes);
+            // deleta o arquivo original
+            // deleta o ficheiro .hash
+            String hashFileName = outputFile.getAbsolutePath().substring(0, outputFile.getAbsolutePath().lastIndexOf(".")) + ".hash";
+            File hashFile = new File(hashFileName);
+            hashFile.delete();
             inputStream.close();
             inputFile.delete();
             outputStream.close();

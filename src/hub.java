@@ -44,12 +44,6 @@ public class hub extends JFrame {
         Txt_area.setLineWrap(true);
         // ----------------- PROGRAMA -----------------
 
-
-
-
-
-
-
         IvParameterSpec iv = Util.generateIv();
         ArrayList<File> files_crifrados = new ArrayList<>();
         ArrayList<String> filesPin = new ArrayList<>();
@@ -126,18 +120,45 @@ public class hub extends JFrame {
         });
 
         Btn_decipher.addActionListener(e -> {
-            File ficheiro = new File("FALL-INTO-OBLIVION/" + valor_selecionado[0]);
-            String novoNome = ficheiro.getName();
-            // tirar a extensao do ficheiro
-            if (novoNome.contains(".")) {
-                novoNome = novoNome.substring(0, novoNome.lastIndexOf("."));
+            // AQUI É A PARTE DO LUIS SANTOS
+            // Ler PIN
+            // Verificar se o PIN está correto maximo de 3 tentativas
+            // Se estiver correto desencriptar o ficheiro
+            // Ao fim das 3 tentativas eliminar o ficheiro
+            // Se o ficheiro for desencriptado com sucesso, apagar o ficheiro .enc e o .hash
+            // Ao fim das 3 tentativas apagar o ficheiro .enc e o .hash
+            int count = 0;
+            String pin_cor = null;
+            for ( File file_enc : files_crifrados) {
+                if (file_enc.getName().equals(valor_selecionado[0])) {
+                    pin_cor = filesPin.get(files_crifrados.indexOf(file_enc));
+                    //JOptionPane.showMessageDialog(null, "PIN correto!");
+                }
             }
-            novoNome += ".txt";
-            File ficheiro_dec = new File("FALL-INTO-OBLIVION/" + novoNome);
+            while (count < 3) {
+                String pin = JOptionPane.showInputDialog("Introduza o PIN");
+                if (pin.equals(pin_cor)) {
+                    JOptionPane.showMessageDialog(null, "PIN correto!");
+                    String novo_nome = valor_selecionado[0].substring(0, valor_selecionado[0].lastIndexOf("."));
+                    novo_nome += ".txt";
+                    Util.decryptFile(pin, "salt", new File("FALL-INTO-OBLIVION/" + valor_selecionado[0]), new File("FALL-INTO-OBLIVION/" + novo_nome), iv);
 
-            Util.decryptFile(filesPin.get(files_crifrados.indexOf(ficheiro)), "salt", ficheiro, ficheiro_dec, iv);
-            JOptionPane.showMessageDialog(null, "Ficheiro desencriptado com sucesso!");
+                    break;
+                } else {
 
+                    if (count == 2){
+                        JOptionPane.showMessageDialog(null, "PIN incorreto! \n Ficheiro eliminado!");
+                        File fich_enc = new File("FALL-INTO-OBLIVION/" + valor_selecionado[0]);
+                        String hashFileName = fich_enc.getAbsolutePath().substring(0, fich_enc.getAbsolutePath().lastIndexOf(".")) + ".hash";
+                        File hashFile = new File(hashFileName);
+                        fich_enc.delete();
+                        hashFile.delete();
+                    }else {
+                        count ++;
+                        JOptionPane.showMessageDialog(null, "PIN incorreto! Tente novamente!");
+                    }
+                }
+            }
             atualizaLista(file);
         });
 
