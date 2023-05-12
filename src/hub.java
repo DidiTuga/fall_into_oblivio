@@ -153,6 +153,7 @@ public class hub extends JFrame {
                         File hashFile = new File(hashFileName);
                         fich_enc.delete();
                         hashFile.delete();
+                        break;
                     }else {
                         count ++;
                         JOptionPane.showMessageDialog(null, "PIN incorreto! Tente novamente!");
