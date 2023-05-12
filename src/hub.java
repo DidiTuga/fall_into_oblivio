@@ -83,7 +83,7 @@ public class hub extends JFrame {
 
             CipherUtil.encryptFile(pin, "salt", ficheiro, ficheiro_enc, iv);
             JOptionPane.showMessageDialog(null, "Ficheiro encriptado com sucesso!");
-
+//
             atualizaLista(file);
         });
 
