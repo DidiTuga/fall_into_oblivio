@@ -153,6 +153,7 @@ public class hub extends JFrame {
                         File hashFile = new File(hashFileName);
                         fich_enc.delete();
                         hashFile.delete();
+                        break; // se o pin estiver incorreto 3 vezes o ficheiro é eliminado
                     }else {
                         count ++;
                         JOptionPane.showMessageDialog(null, "PIN incorreto! Tente novamente!");
