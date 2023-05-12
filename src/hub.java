@@ -5,7 +5,11 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Random;
+import java.util.logging.Handler;
+
+import static java.lang.Thread.sleep;
 
 public class hub extends JFrame {
     private JPanel hubInicial;
@@ -16,7 +20,7 @@ public class hub extends JFrame {
     private JList list_ficheiros;
     private JScrollPane Scl_Pane;
 
-    private Integer contador = 0;
+
 
     public hub() {
         String[] valor_selecionado = new String[1];
@@ -26,7 +30,7 @@ public class hub extends JFrame {
             file.mkdir();
         }
 
-        //a serio?
+
         atualizaLista(file);
 
         setContentPane(hubInicial);
@@ -39,11 +43,63 @@ public class hub extends JFrame {
         Txt_area.setEditable(false);
         Txt_area.setLineWrap(true);
         // ----------------- PROGRAMA -----------------
-        IvParameterSpec iv = CipherUtil.generateIv();
-        // gerar um pin com 4 digitos
-        String pin = String.format("%04d", new Random().nextInt(10000));
-        // print do pin no janela
-        JOptionPane.showMessageDialog(null, "O teu pin é: " + pin);
+
+
+
+
+
+
+
+        IvParameterSpec iv = Util.generateIv();
+        ArrayList<File> files_crifrados = new ArrayList<>();
+        ArrayList<String> filesPin = new ArrayList<>();
+        // criar a thread que vai cifrar os ficheiros
+
+        // THREAD --------------------------
+        new Thread(() -> {
+            File pasta = new File("FALL-INTO-OBLIVION");
+            if (!pasta.exists()) {
+                pasta.mkdir();
+            }
+
+            while (true) {
+                File[] files = pasta.listFiles();
+                assert files != null;
+
+                // se o numero de ficheiros cifrados *2 for igual ao numero de ficheiros na pasta entao todos os ficheiros estao cifrados
+                if ((files_crifrados.size() * 2) == files.length) {
+                } else {
+                    for (File f : files) {
+                        int ponto = f.getName().lastIndexOf(".");
+                        int n = f.getName().length();
+                        String under = f.getName().substring(ponto, n);
+                        // para nao cifrar ficheiros que ja estao cifrados ou ficheiros .hash
+                        if (files_crifrados.contains(f) || under.equals(".hash")) {
+
+                        }
+                        // criar o ficheiro.enc e o pin para o ficheiro
+                        else {
+                            String novoNome = f.getName().substring(0, f.getName().lastIndexOf("."));
+                            novoNome += ".enc";
+                            File ficheiro_enc = new File("FALL-INTO-OBLIVION/", novoNome);
+                            String pin = String.format("%04d", new Random().nextInt(10000));
+                            filesPin.add(pin);
+                            files_crifrados.add(ficheiro_enc);
+                            // tirar a extensao do ficheiro
+                            Util.encryptFile(pin, "salt", f, ficheiro_enc, iv);
+                            atualizaLista(pasta);
+                        }
+                    }
+                }
+                try {
+                    sleep(1500);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }).start();
+        // -----------------------------------
 
         // quando clicar num componente da lista
         list_ficheiros.addMouseListener(new MouseAdapter() {
@@ -68,44 +124,8 @@ public class hub extends JFrame {
                 }
             }
         });
-        Btn_cipher.addActionListener(e -> {
-
-            File ficheiro = new File("FALL-INTO-OBLIVION/" + valor_selecionado[0]);
-            list_ficheiros.clearSelection();
-            String novoNome = ficheiro.getName();
-            // tirar a extensao do ficheiro
-            if (novoNome.contains(".")) {
-                novoNome = novoNome.substring(0, novoNome.lastIndexOf("."));
-            }
-
-            novoNome += ".enc";
-            File ficheiro_enc = new File("FALL-INTO-OBLIVION/", novoNome);
-
-            CipherUtil.encryptFile(pin, "salt", ficheiro, ficheiro_enc, iv);
-            JOptionPane.showMessageDialog(null, "Ficheiro encriptado com sucesso!");
-
-            atualizaLista(file);
-        });
 
         Btn_decipher.addActionListener(e -> {
-           //-----LUIS-----
-            //PERMITIR DECIFRAR O FICHEIRO POR UMA ADVINHAÇÃO DO PIN
-            //SO DEVEM SER PERMITIDAS ATE 3 TENTATIVAS
-            //SE O PIN FOR INCORRETO 3 VEZES, O FICHEIRO DEVE SER APAGADO -- VERIFICAR ENUNCIADO
-            //----------------
-            // VERIFICAR INTEGRIDADE DO FICHEIRO
-
-            while (!JOptionPane.showInputDialog("Insira o pin:").equals(pin)) {
-                contador++;
-                JOptionPane.showMessageDialog(null, "Pin incorreto!");
-
-                if (contador == 3) {
-                    JOptionPane.showMessageDialog(null, "Numero de tentativas excedido!");
-                    //delete the file
-                    return;
-                }
-                return;
-            }
             File ficheiro = new File("FALL-INTO-OBLIVION/" + valor_selecionado[0]);
             String novoNome = ficheiro.getName();
             // tirar a extensao do ficheiro
@@ -115,7 +135,7 @@ public class hub extends JFrame {
             novoNome += ".txt";
             File ficheiro_dec = new File("FALL-INTO-OBLIVION/" + novoNome);
 
-            CipherUtil.decryptFile(pin, "salt", ficheiro, ficheiro_dec, iv);
+            Util.decryptFile(filesPin.get(files_crifrados.indexOf(ficheiro)), "salt", ficheiro, ficheiro_dec, iv);
             JOptionPane.showMessageDialog(null, "Ficheiro desencriptado com sucesso!");
 
             atualizaLista(file);
