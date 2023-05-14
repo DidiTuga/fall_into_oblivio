@@ -14,27 +14,52 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 
 public class Util {
-    // Generate a 256-bit key from a password and a salt
-    public static SecretKey getKeyFromPassword(String password, String salt)
+    // vai gerar uma chave a partir de uma password e um salt SHA : 160, 256, 384
+    public static SecretKey getKeyFromPassword(String password, String salt, String tamChave, String algorithm)
             throws NoSuchAlgorithmException, InvalidKeySpecException {
-
-        SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-        KeySpec spec = new PBEKeySpec(password.toCharArray(), salt.getBytes(), 65536, 256);
+        SecretKeyFactory factory = null;
+        if (tamChave.equals("160")) {
+            factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+        } else {
+            factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA" + tamChave);
+        }
+        KeySpec spec = new PBEKeySpec(password.toCharArray(), salt.getBytes(), 65536, Integer.parseInt(tamChave));
         return new SecretKeySpec(factory.generateSecret(spec)
-                .getEncoded(), "AES");
+                .getEncoded(), algorithm);
     }
-
-    public static IvParameterSpec generateIv() {
-        byte[] iv = new byte[16];
+    // gera um salt aleatorio
+    public static IvParameterSpec generateIv(int ivSize) {
+        byte[] iv = new byte[ivSize];
         new SecureRandom().nextBytes(iv);
         return new IvParameterSpec(iv);
     }
 
-    public static void encryptFile(String password, String salt, File inputFile, File outputFile, IvParameterSpec iv) {
+    // encripta um ficheiro
+    public static void encryptFile(String password, String salt, File inputFile, File outputFile, IvParameterSpec[] iv, String algorithm, String hashAlgorithm, String tamChave) {
         try {
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            // encripta o arquivo
-            cipher.init(Cipher.ENCRYPT_MODE, getKeyFromPassword(password, salt), iv);
+            SecretKey key = getKeyFromPassword(password, salt, tamChave, algorithm);
+            IvParameterSpec ivO = null;
+            // escolhe o iv para cada cifra (AES, Blowfish)
+            switch (algorithm) {
+                case "AES":
+                    algorithm = "AES/CBC/PKCS5Padding";
+                    ivO = iv[0];
+                    break;
+                case "Blowfish":
+                    algorithm = "Blowfish/CBC/PKCS5Padding";
+                    ivO = iv[1];
+                    break;
+                case "RC4":
+                    algorithm = "RC4";
+                    break;
+            }
+            Cipher cipher = Cipher.getInstance(algorithm);
+            // encripta o arquivo sem IV (RC4) ou com IV (AES, Blowfish)
+            if (algorithm.equals("RC4")) {
+                cipher.init(Cipher.ENCRYPT_MODE, key);
+            } else {
+                cipher.init(Cipher.ENCRYPT_MODE, key, ivO);
+            }
             FileInputStream inputStream = new FileInputStream(inputFile);
             byte[] buffer = new byte[64];
             int bytesRead;
@@ -48,15 +73,13 @@ public class Util {
             if (outputBytes != null)
                 outputStream.write(outputBytes);
             // calcula o hash do arquivo original
-            String hash = Util.hashFile(inputStream, "SHA-256");
+            String hash = Util.hashFile(inputStream, hashAlgorithm);
             // escreve o hash no arquivo criptografado
-            String hashFileName = outputFile.getAbsolutePath().substring(0, outputFile.getAbsolutePath().lastIndexOf(".")) + ".hash";
+            String hashFileName = outputFile.getAbsolutePath().substring(0, outputFile.getAbsolutePath().lastIndexOf(".")) + "." + hashAlgorithm;
             File hashFile = new File(hashFileName);
             FileOutputStream hashOutputStream = new FileOutputStream(hashFile);
             hashOutputStream.write(hash.getBytes());
             hashOutputStream.close();
-
-
             // deleta o arquivo original
             inputStream.close();
             inputFile.delete();
@@ -66,12 +89,12 @@ public class Util {
         }
 
     }
-
+    // calcula o hash de um arquivo com um algoritmo especifico
     private static String hashFile(FileInputStream inputFile, String algorithm) {
-        String hash = new String();
+        String hash = "";
         try {
             MessageDigest md = MessageDigest.getInstance(algorithm);
-            byte messageDigest[] = md.digest(inputFile.readAllBytes());
+            byte[] messageDigest = md.digest(inputFile.readAllBytes());
             StringBuilder sb = new StringBuilder();
             for (byte b : messageDigest) {
                 sb.append(String.format("%02x", b));
@@ -84,12 +107,39 @@ public class Util {
         return hash;
     }
 
-    // Decrypt a file
-    public static void decryptFile(String password, String salt, File inputFile, File outputFile, IvParameterSpec iv) {
+    // Decripta um arquivo e vai buscar o metodo de encriptacao e o tamanho da chave ao nome do arquivo
+    public static void decryptFile(String password, String salt, File inputFile, File outputFile, IvParameterSpec[] iv) {
+        String input = inputFile.getName();
+        String extension = input.substring(input.lastIndexOf("."));
+        // os 3 ultimos caracteres da extensao sao o tamanho da chave
 
+        String tamChave = extension.substring(extension.length() - 3);
+        // os outros caracteres sao o algoritmo
+        String algorithm = extension.substring(1, extension.length() - 3);
+        System.out.println(extension + " " + algorithm + " " + tamChave);
+        IvParameterSpec ivO = null;
         try {
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            cipher.init(Cipher.DECRYPT_MODE, getKeyFromPassword(password, salt), iv);
+            SecretKey key = getKeyFromPassword(password, salt, tamChave, algorithm);
+            switch (algorithm) {
+                case "AES":
+                    algorithm = "AES/CBC/PKCS5Padding";
+                    ivO = iv[0];
+                    break;
+                case "Blowfish":
+                    algorithm = "Blowfish/CBC/PKCS5Padding";
+                    ivO = iv[1];
+                    break;
+                case "RC4":
+                    algorithm = "RC4";
+                    break;
+            }
+            Cipher cipher = Cipher.getInstance(algorithm);
+            // decripta o arquivo
+            if (algorithm.equals("RC4")) {
+                cipher.init(Cipher.DECRYPT_MODE, key);
+            } else {
+                cipher.init(Cipher.DECRYPT_MODE, key, ivO);
+            }
             FileInputStream inputStream = new FileInputStream(inputFile);
             byte[] buffer = new byte[64];
             int bytesRead;

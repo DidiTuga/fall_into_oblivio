@@ -30,7 +30,7 @@ Code (MAC) ou uma assinatura digital do ficheiro. A chave usada para cifrar o fi
 - [x]  calcular o valor de hash do ficheiro, guardando também o resultado junto com o criptograma (em ficheiros separados) (explorar diferentes valores de hash) 1.5
 - [x]  gerar automaticamente um PIN, e usá-lo como chave para cifrar cada ficheiro;
 - [ ]  calcular o MAC dos criptogramas; 2
-- [ ]  permitir decifrar o ficheiro por via da adivinhação do PIN. Só devem ser permitidas até 3 tentativas; 3
+- [x]  permitir decifrar o ficheiro por via da adivinhação do PIN. Só devem ser permitidas até 3 tentativas; 3
 - [ ]  verificar a integridade do ficheiro no caso do PIN ter sido adivinhado. 3
 
 Pode correr em modo modo Client Line Interface (CLI) ou em modo gráfico (fica ao
@@ -42,8 +42,8 @@ Devem usar cifras e mecanismos de autenticação de mensagens de qualidade (e.g.
 
 - [ ]  substituir os MACs por assinaturas digitais (o programa deve então também permitir
 gerar as chaves pública e privadas); 4
-- [ ]  permitir que o utilizador escolha a cifra a utilizar e o comprimento da chave de cifra; 7
-- [ ]  permitir que o utilizador escolha a função de hash a usar; 7
+- [x]  permitir que o utilizador escolha a cifra a utilizar e o comprimento da chave de cifra; 7
+- [x]  permitir que o utilizador escolha a função de hash a usar; 7
 - [ ]  ter um help completo e intuitivo. 5
 
 Pensem numa forma de atacar o sistema (uma falha
