@@ -35,7 +35,6 @@ Code (MAC) ou uma assinatura digital do ficheiro. A chave usada para cifrar o fi
 
 Pode correr em modo modo Client Line Interface (CLI) ou em modo gráfico (fica ao
 critério dos executantes).
-
 Devem usar cifras e mecanismos de autenticação de mensagens de qualidade (e.g., Advanced Encryption Standard em modo Cipher Block Chainign (AES-CBC) e Hash MAC Secure Hash Algorithm 256 (HMAC-SHA256)).
 
 ## Funcionalidades adicionais

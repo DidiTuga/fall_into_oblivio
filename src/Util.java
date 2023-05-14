@@ -133,6 +133,7 @@ public class Util {
                     algorithm = "RC4";
                     break;
             }
+
             Cipher cipher = Cipher.getInstance(algorithm);
             // decripta o arquivo
             if (algorithm.equals("RC4")) {

@@ -3,6 +3,10 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -17,6 +21,7 @@ public class hub extends JFrame {
     private JComboBox CB_cifra;
     private JComboBox CB_tamanho;
     private JComboBox CB_hash;
+    private JTextArea Txt_area;
 
 
     public hub() {
@@ -48,6 +53,8 @@ public class hub extends JFrame {
         setContentPane(hubInicial);
         setTitle("Hub");
         setSize(500, 500);
+        Txt_area.setEditable(false);
+        Txt_area.setLineWrap(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // meter centrada
         setLocationRelativeTo(null);
@@ -117,6 +124,20 @@ public class hub extends JFrame {
                         return;
                     }
                     valor_selecionado[0] = list_ficheiros.getSelectedValue().toString();
+                    // ir buscar o conteudo do ficheiro
+                    File ficheiro = new File("FALL-INTO-OBLIVION/" + valor_selecionado[0]);
+                    try {
+                        FileInputStream input = new FileInputStream(ficheiro);
+                        byte[] data = new byte[(int) ficheiro.length()];
+                        input.read(data);
+                        input.close();
+                        String conteudo = new String(data, StandardCharsets.UTF_8);
+                        Txt_area.setText(conteudo);
+                    } catch (FileNotFoundException e) {
+                        throw new RuntimeException(e);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
         });
