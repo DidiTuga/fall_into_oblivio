@@ -1,4 +1,3 @@
-
 import javax.swing.*;
 
 public class Main {
@@ -7,7 +6,8 @@ public class Main {
 
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception exception) {}
+        } catch (Exception exception) {
+        }
 
         JFrame.setDefaultLookAndFeelDecorated(true);
         hub ola = new hub();
