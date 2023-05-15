@@ -22,15 +22,15 @@ public class hub extends JFrame {
     private JComboBox CB_tamanho;
     private JComboBox CB_hash;
     private JTextArea Txt_area;
-
+    // ----------------- VARIAVEIS ----------------- //
+    private String[] algoritmo_cifras = {"AES", "Blowfish", "RC4"};
+    private String[] algoritmo_hash = {"SHA-256", "SHA-512", "MD5"};
+    private String[] tamanho_chave = {"160", "256", "384"};
 
     public hub() {
         // ----------------- VARIAVEIS -----------------
-        String[] valor_selecionado = new String[1];
-        String[] algoritmo_cifras = {"AES", "Blowfish", "RC4"};
-        String[] algoritmo_hash = {"SHA-256", "SHA-512", "MD5"};
-        String[] tamanho_chave = {"160", "256", "384"};
         // guarda o valor
+        String[] valor_selecionado = new String[1];
         String[] tam_chave = new String[1];
         String[] cifra = new String[1];
         String[] hash = new String[1];
@@ -80,14 +80,12 @@ public class hub extends JFrame {
                         int ponto = f.getName().lastIndexOf(".");
                         int n = f.getName().length();
                         String under = f.getName().substring(ponto, n);
-                        // para nao cifrar ficheiros que ja estao cifrados ou ficheiros .hash
-                        if (!under.equals(".txt")) {
-
+                        // para nao cifrar ficheiros que ja estao cifrados ou se são extensoes de ficheiros hash
+                        if (verificaFicheiro(under)) {
                         }
                         // criar o ficheiro.enc e o pin para o ficheiro
                         else {
-                            String novoNome = f.getName().substring(0, f.getName().lastIndexOf("."));
-                            novoNome += "." + cifra[0] + tam_chave[0];
+                            String novoNome = f.getName()+ "."+ cifra[0] + tam_chave[0];
                             File ficheiro_enc = new File("FALL-INTO-OBLIVION/", novoNome);
                             String pin = String.format("%04d", new Random().nextInt(10000));
                             System.out.println(novoNome + " PIN: " + pin);
@@ -162,10 +160,8 @@ public class hub extends JFrame {
                 if (pin.equals(pin_cor)) {
                     JOptionPane.showMessageDialog(null, "PIN correto!");
                     String novo_nome = valor_selecionado[0].substring(0, valor_selecionado[0].lastIndexOf("."));
-                    novo_nome += ".txt";
                     File ficheiro_enc = new File("FALL-INTO-OBLIVION/" + valor_selecionado[0]);
                     Util.decryptFile(pin, "salt", ficheiro_enc, new File("FALL-INTO-OBLIVION/" + novo_nome), iv);
-
                     break;
                 } else {
                     // se o pin estiver errado 3 vezes elimina os ficheiros
@@ -228,6 +224,22 @@ public class hub extends JFrame {
         // centralizar o conteudo da lista
         DefaultListCellRenderer renderer = (DefaultListCellRenderer) list_ficheiros.getCellRenderer();
         renderer.setHorizontalAlignment(SwingConstants.CENTER);
+    }
+
+    // função para verificar se o ficheiro é ou não para ser cifrado
+    // envia true se for para cifrar e false se não for para cifrar
+    public boolean verificaFicheiro(String extension){
+        for (String ext : algoritmo_cifras) {
+            if (extension.contains(ext)) {
+                return true;
+            }
+        }
+        for (String ext : algoritmo_hash) {
+            if (extension.contains(ext)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
