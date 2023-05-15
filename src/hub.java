@@ -82,7 +82,6 @@ public class hub extends JFrame {
                         String under = f.getName().substring(ponto, n);
                         // para nao cifrar ficheiros que ja estao cifrados ou se são extensoes de ficheiros hash
                         if (verificaFicheiro(under)) {
-
                         }
                         // criar o ficheiro.enc e o pin para o ficheiro
                         else {
