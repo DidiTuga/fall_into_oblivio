@@ -27,6 +27,8 @@ public class hub extends JFrame {
     private String[] algoritmo_hash = {"SHA-256", "SHA-512", "MD5"};
     private String[] tamanho_chave = {"160", "256", "384"};
 
+    private int flag_delay = 0;
+
     public hub() {
         // ----------------- VARIAVEIS -----------------
         // guarda o valor
@@ -77,7 +79,15 @@ public class hub extends JFrame {
                 // se o numero de ficheiros cifrados *2 for igual ao numero de ficheiros na pasta entao todos os ficheiros estao cifrados
                 int numero_ficheiros = ficheiros.length;
                 int n_cifrados = files_crifrados.size();
-                if ((((n_cifrados * 2)-1)<= numero_ficheiros) && (numero_ficheiros == 0)){
+                if (flag_delay== 1){
+                    try {
+                        sleep(15000);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    flag_delay = 0;
+                }
+                if ((((n_cifrados * 2))== numero_ficheiros) && (numero_ficheiros != 0)){
                 } else {
                     for (File f : ficheiros) {
                         int ponto = f.getName().lastIndexOf(".");
@@ -97,12 +107,12 @@ public class hub extends JFrame {
                             // tirar a extensao do ficheiro
                             Util.encryptFile(pin, "salt", f, ficheiro_enc, iv, cifra[0], hash[0], tam_chave[0]);
                             atualizaLista(pasta);
-                            /*
-                            System.out.println("DEBBUG:");
+
+                            System.out.println("DEBBUG: __ thread");
                             System.out.println(files_crifrados.size());
                             System.out.println(filesPin.size());
                             System.out.println(ficheiros.length);
-                            */
+
                         }
                     }
                 }
@@ -168,6 +178,7 @@ public class hub extends JFrame {
                     File ficheiro_enc = new File("FALL-INTO-OBLIVION/" + valor_selecionado[0]);
                     if (Util.decryptFile(pin, "salt", ficheiro_enc, new File("FALL-INTO-OBLIVION/" + novo_nome), iv)){
                         // remover o ficheiro da lista e o pin
+                        flag_delay = 1;
                         for (int i = 0; i < files_crifrados.size(); i++) {
                             if (files_crifrados.get(i).getName().equals(valor_selecionado[0])) {
                                 files_crifrados.remove(i);
