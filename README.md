@@ -42,7 +42,7 @@ operativo.
 - [x]  gerar automaticamente um PIN, e usá-lo como chave para cifrar cada ficheiro;
 - [ ]  calcular o MAC dos criptogramas; 2
 - [x]  permitir decifrar o ficheiro por via da adivinhação do PIN. Só devem ser permitidas até 3 tentativas; 3
-- [ ]  verificar a integridade do ficheiro no caso do PIN ter sido adivinhado. 3
+- [x]  verificar a integridade do ficheiro no caso do PIN ter sido adivinhado. 3
 
 Pode correr em modo modo Client Line Interface (CLI) ou em modo gráfico (fica ao
 critério dos executantes).
