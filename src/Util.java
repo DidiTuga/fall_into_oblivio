@@ -4,9 +4,8 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -27,6 +26,7 @@ public class Util {
         return new SecretKeySpec(factory.generateSecret(spec)
                 .getEncoded(), algorithm);
     }
+
     // gera um salt aleatorio
     public static IvParameterSpec generateIv(int ivSize) {
         byte[] iv = new byte[ivSize];
@@ -72,51 +72,64 @@ public class Util {
             byte[] outputBytes = cipher.doFinal();
             if (outputBytes != null)
                 outputStream.write(outputBytes);
+            outputStream.close();
             // calcula o hash do arquivo original
-            String hash = Util.hashFile(inputStream, hashAlgorithm);
+            byte[] hash = Util.hashFile(inputFile, hashAlgorithm);
             // escreve o hash no arquivo criptografado
             String hashFileName = outputFile.getAbsolutePath().substring(0, outputFile.getAbsolutePath().lastIndexOf(".")) + "." + hashAlgorithm;
             File hashFile = new File(hashFileName);
             FileOutputStream hashOutputStream = new FileOutputStream(hashFile);
-            hashOutputStream.write(hash.getBytes());
+            hashOutputStream.write(bytesToHex(hash).getBytes());
             hashOutputStream.close();
             // deleta o arquivo original
             inputStream.close();
             inputFile.delete();
-            outputStream.close();
+
         } catch (Exception e) {
             System.out.println(e);
         }
 
     }
+
     // calcula o hash de um arquivo com um algoritmo especifico
-    private static String hashFile(FileInputStream inputFile, String algorithm) {
-        String hash = "";
+    public static byte[] hashFile(File inputFile, String algorithm) {
+
         try {
             MessageDigest md = MessageDigest.getInstance(algorithm);
-            byte[] messageDigest = md.digest(inputFile.readAllBytes());
-            StringBuilder sb = new StringBuilder();
-            for (byte b : messageDigest) {
-                sb.append(String.format("%02x", b));
+            FileInputStream inputStream = new FileInputStream(inputFile);
+            byte[] buffer = new byte[8192];
+            int bytesRead = 0;
+            while ((bytesRead = inputStream.read(buffer)) > 0) {
+                md.update(buffer, 0, bytesRead);
             }
-            hash = sb.toString();
+            inputStream.close();
+            return md.digest();
         } catch (Exception e) {
             System.out.println(e);
         }
-
-        return hash;
+        return null;
     }
 
     // Decripta um arquivo e vai buscar o metodo de encriptacao e o tamanho da chave ao nome do arquivo
-    public static void decryptFile(String password, String salt, File inputFile, File outputFile, IvParameterSpec[] iv) {
+    public static boolean decryptFile(String password, String salt, File inputFile, File outputFile, IvParameterSpec[] iv) {
         String input = inputFile.getName();
         String extension = input.substring(input.lastIndexOf("."));
+        String nome = input.substring(0, input.lastIndexOf("."));
         // os 3 ultimos caracteres da extensao sao o tamanho da chave
 
         String tamChave = extension.substring(extension.length() - 3);
         // os outros caracteres sao o algoritmo
         String algorithm = extension.substring(1, extension.length() - 3);
-        System.out.println(extension + " " + algorithm + " " + tamChave);
+        // ir buscar o hash do arquivo original
+        File pasta = inputFile.getParentFile();
+        File [] ficheiros = pasta.listFiles();
+        File ficheiro_hash = null;
+        for (File file : ficheiros){
+            if (file.getName().contains(nome) && !file.getName().contains(extension)){
+                ficheiro_hash = file;
+                break;
+            }
+        }
         IvParameterSpec ivO = null;
         try {
             SecretKey key = getKeyFromPassword(password, salt, tamChave, algorithm);
@@ -153,18 +166,38 @@ public class Util {
             byte[] outputBytes = cipher.doFinal();
             if (outputBytes != null)
                 outputStream.write(outputBytes);
+            // Verifica se o hash do arquivo original e igual ao hash do arquivo decriptado
+            String hashAlgorithm = ficheiro_hash.getName().substring(ficheiro_hash.getName().lastIndexOf(".")+1);
+            byte[] hash_novo = hashFile(outputFile, hashAlgorithm);
+            String hash_novo_string = bytesToHex(hash_novo);
+            // ler o hash do arquivo original do ficheiro hash
+            BufferedReader br = new BufferedReader(new FileReader(ficheiro_hash));
+            String hashOriginal = br.readLine();
+
+            br.close();
+            ficheiro_hash.delete();
+
             // deleta o arquivo original
-            // deleta o ficheiro .hash
-            String hashFileName = outputFile.getAbsolutePath().substring(0, outputFile.getAbsolutePath().lastIndexOf(".")) + ".hash";
-            File hashFile = new File(hashFileName);
-            hashFile.delete();
             inputStream.close();
             inputFile.delete();
             outputStream.close();
+            // se os hashes forem diferentes, o arquivo foi alterado
+            if (!hash_novo_string.equals(hashOriginal)) {
+                outputFile.delete();
+                return false;
+            }
+
         } catch (Exception e) {
             System.out.println(e);
         }
 
-
+        return true;
+    }
+    public static String bytesToHex(byte[] hash) {
+        StringBuilder sb = new StringBuilder();
+        for (byte b : hash) {
+            sb.append(String.format("%02x", b));
+        }
+        return sb.toString();
     }
 }

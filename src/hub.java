@@ -46,6 +46,7 @@ public class hub extends JFrame {
         ArrayList<String> filesPin = new ArrayList<>();
 
         // ----------------- GUI -----------------
+        Btn_decipher.setEnabled(false);
         CB_cifra.setModel(new DefaultComboBoxModel(algoritmo_cifras));
         CB_hash.setModel(new DefaultComboBoxModel(algoritmo_hash));
         CB_tamanho.setModel(new DefaultComboBoxModel(tamanho_chave));
@@ -70,13 +71,15 @@ public class hub extends JFrame {
             atualizaLista(pasta);
 
             while (true) {
-                File[] files = pasta.listFiles();
-                assert files != null;
+                File[] ficheiros = pasta.listFiles();
+                assert ficheiros != null;
 
                 // se o numero de ficheiros cifrados *2 for igual ao numero de ficheiros na pasta entao todos os ficheiros estao cifrados
-                if ((files_crifrados.size() * 2) == files.length) {
+                int numero_ficheiros = ficheiros.length;
+                int n_cifrados = files_crifrados.size();
+                if ((((n_cifrados * 2)-1)<= numero_ficheiros) && (numero_ficheiros == 0)){
                 } else {
-                    for (File f : files) {
+                    for (File f : ficheiros) {
                         int ponto = f.getName().lastIndexOf(".");
                         int n = f.getName().length();
                         String under = f.getName().substring(ponto, n);
@@ -85,7 +88,7 @@ public class hub extends JFrame {
                         }
                         // criar o ficheiro.enc e o pin para o ficheiro
                         else {
-                            String novoNome = f.getName()+ "."+ cifra[0] + tam_chave[0];
+                            String novoNome = f.getName() + "." + cifra[0] + tam_chave[0];
                             File ficheiro_enc = new File("FALL-INTO-OBLIVION/", novoNome);
                             String pin = String.format("%04d", new Random().nextInt(10000));
                             System.out.println(novoNome + " PIN: " + pin);
@@ -98,7 +101,7 @@ public class hub extends JFrame {
                             System.out.println("DEBBUG:");
                             System.out.println(files_crifrados.size());
                             System.out.println(filesPin.size());
-                            System.out.println(files.length);
+                            System.out.println(ficheiros.length);
                             */
                         }
                     }
@@ -119,8 +122,10 @@ public class hub extends JFrame {
             public void valueChanged(ListSelectionEvent arg0) {
                 if (!arg0.getValueIsAdjusting()) {
                     if (list_ficheiros.getSelectedValue() == null) {
+                        Btn_decipher.setEnabled(false);
                         return;
                     }
+                    Btn_decipher.setEnabled(true);
                     valor_selecionado[0] = list_ficheiros.getSelectedValue().toString();
                     // ir buscar o conteudo do ficheiro
                     File ficheiro = new File("FALL-INTO-OBLIVION/" + valor_selecionado[0]);
@@ -141,7 +146,6 @@ public class hub extends JFrame {
         });
 
         Btn_decipher.addActionListener(e -> {
-            // AQUI É A PARTE DO LUIS SANTOS
             // Ler PIN
             // Verificar se o PIN está correto maximo de 3 tentativas
             // Se estiver correto desencriptar o ficheiro
@@ -157,11 +161,22 @@ public class hub extends JFrame {
             }
             while (count < 3) {
                 String pin = JOptionPane.showInputDialog("Introduza o PIN");
+
                 if (pin.equals(pin_cor)) {
                     JOptionPane.showMessageDialog(null, "PIN correto!");
                     String novo_nome = valor_selecionado[0].substring(0, valor_selecionado[0].lastIndexOf("."));
                     File ficheiro_enc = new File("FALL-INTO-OBLIVION/" + valor_selecionado[0]);
-                    Util.decryptFile(pin, "salt", ficheiro_enc, new File("FALL-INTO-OBLIVION/" + novo_nome), iv);
+                    if (Util.decryptFile(pin, "salt", ficheiro_enc, new File("FALL-INTO-OBLIVION/" + novo_nome), iv)){
+                        // remover o ficheiro da lista e o pin
+                        for (int i = 0; i < files_crifrados.size(); i++) {
+                            if (files_crifrados.get(i).getName().equals(valor_selecionado[0])) {
+                                files_crifrados.remove(i);
+                                filesPin.remove(i);
+                            }
+                        }
+                    }else{
+                        JOptionPane.showMessageDialog(null, "Ficheiro corrompido!", "Erro", JOptionPane.ERROR_MESSAGE);
+                    }
                     break;
                 } else {
                     // se o pin estiver errado 3 vezes elimina os ficheiros
@@ -195,7 +210,7 @@ public class hub extends JFrame {
             File file = new File("FALL-INTO-OBLIVION");
             atualizaLista(file);
         });
-        // ----------------------------------- Ir buscar o valor do combobox
+        // Ir buscar o valor do combobox
         CB_cifra.addActionListener(e -> {
             cifra[0] = CB_cifra.getSelectedItem().toString();
         });
@@ -207,7 +222,7 @@ public class hub extends JFrame {
         });
     }
 
-    // ----------------------------------- Atualizar a lista de ficheiros
+    // Atualizar a lista de ficheiros
     // Vai buscar os ficheiros passa os nomes para uma lista
     // Centraliza o conteudo da lista
     public void atualizaLista(File file) {
@@ -216,19 +231,17 @@ public class hub extends JFrame {
         for (File file1 : ficheiros) {
             lista_ficheiros.addElement(file1.getName());
         }
-        // adicionar o modelo a uma scroll bar
         list_ficheiros.setModel(lista_ficheiros);
-        // meter o conteudo da lista centrado
         list_ficheiros.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         list_ficheiros.setVisibleRowCount(-1);
-        // centralizar o conteudo da lista
+
         DefaultListCellRenderer renderer = (DefaultListCellRenderer) list_ficheiros.getCellRenderer();
         renderer.setHorizontalAlignment(SwingConstants.CENTER);
     }
 
     // função para verificar se o ficheiro é ou não para ser cifrado
     // envia true se for para cifrar e false se não for para cifrar
-    public boolean verificaFicheiro(String extension){
+    public boolean verificaFicheiro(String extension) {
         for (String ext : algoritmo_cifras) {
             if (extension.contains(ext)) {
                 return true;
