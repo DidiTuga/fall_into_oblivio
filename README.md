@@ -40,7 +40,7 @@ operativo.
 - [x]  calcular o valor de hash do ficheiro, guardando também o resultado junto com o criptograma (em ficheiros
   separados) (explorar diferentes valores de hash) 1.5
 - [x]  gerar automaticamente um PIN, e usá-lo como chave para cifrar cada ficheiro;
-- [ ]  calcular o MAC dos criptogramas; 2
+- [x]  calcular o MAC dos criptogramas; 2
 - [x]  permitir decifrar o ficheiro por via da adivinhação do PIN. Só devem ser permitidas até 3 tentativas; 3
 - [x]  verificar a integridade do ficheiro no caso do PIN ter sido adivinhado. 3
 
