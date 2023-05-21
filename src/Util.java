@@ -46,6 +46,15 @@ public class Util {
         return new IvParameterSpec(iv);
     }
 
+    /**
+     * Função para assinar um hash com uma chave privada
+     * @param hash - hash a ser assinado
+     * @param privada - chave privada
+     * @return assinatura - assinatura do hash
+     * @throws NoSuchAlgorithmException - algoritmo de assinatura não existe
+     * @throws InvalidKeyException - chave privada inválida
+     * @throws SignatureException - assinatura inválida
+     */
     private static byte[] assinar(byte[] hash, PrivateKey privada) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
         Signature assinatura = Signature.getInstance("SHA256withDSA");
         assinatura.initSign(privada);
@@ -54,6 +63,16 @@ public class Util {
         return assinatura.sign();
     }
 
+    /**
+     * Função para verificar a assinatura de um hash com uma chave pública
+     * @param hash - hash a ser verificado
+     * @param assinatura - assinatura do hash
+     * @param publica - chave pública
+     * @return boolean - true se a assinatura for válida, false caso contrário
+     * @throws NoSuchAlgorithmException - algoritmo de assinatura não existe
+     * @throws InvalidKeyException - chave pública inválida
+     * @throws SignatureException - assinatura inválida
+     */
     private static boolean verificar(byte[] hash, byte[] assinatura, PublicKey publica) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
         Signature verificacao = Signature.getInstance("SHA256withDSA");
         verificacao.initVerify(publica);
@@ -62,6 +81,21 @@ public class Util {
         return verificacao.verify(assinatura);
     }
 
+    /**
+     * Função para encriptar um arquivo com uma chave simétrica
+     * Criando um arquivo com o hash do arquivo original e assinando o hash com uma chave privada
+     * Cifras: AES, Blowfish, RC4
+     * tamanhos de chave: 160, 256, 384
+     * @param password - password para gerar a chave
+     * @param salt - salt para gerar a chave
+     * @param inputFile - arquivo a ser encriptado
+     * @param outputFile - arquivo encriptado
+     * @param iv - iv para cada cifra (AES, Blowfish)
+     * @param algorithm - algoritmo de encriptacao
+     * @param hashAlgorithm - algoritmo de hash
+     * @param tamChave - tamanho da chave
+     * @param privada - chave privada
+     */
     public static void encryptFile(String password, String salt, File inputFile, File outputFile, IvParameterSpec[] iv, String algorithm, String hashAlgorithm, String tamChave, PrivateKey privada) {
         try {
             SecretKey key = getKeyFromPassword(password, salt, tamChave, algorithm);
@@ -114,13 +148,18 @@ public class Util {
             inputFile.delete();
 
         } catch (Exception e) {
-            System.out.println("Erro ao encriptar o arquivo");
             System.out.println(e);
         }
 
     }
 
-    // calcula o hash de um arquivo com um algoritmo especifico
+    /**
+     * Função para calcular o hash de um arquivo
+     * Hash: SHA-256, SHA-512, MD5
+     * @param inputFile - arquivo a ser calculado o hash
+     * @param algorithm - algoritmo de hash
+     * @return hash - hash do arquivo
+     */
     public static byte[] hashFile(Path inputFile, String algorithm) {
 
         try {
@@ -133,7 +172,16 @@ public class Util {
         return null;
     }
 
-    // Decripta um arquivo e vai buscar o metodo de encriptacao e o tamanho da chave ao nome do arquivo
+    /**
+     * Função para decriptar um arquivo com uma chave simétrica e verificar a integridade do arquivo com a assinatura do hash
+     * @param password - password para gerar a chave
+     * @param salt - salt para gerar a chave
+     * @param inputFile - arquivo a ser decriptado
+     * @param outputFile - arquivo decriptado
+     * @param iv - iv para cada cifra (AES, Blowfish)
+     * @param publica - chave pública
+     * @return boolean - true se a assinatura for válida, false caso contrário
+     */
     public static boolean decryptFile(String password, String salt, File inputFile, File outputFile, IvParameterSpec[] iv, PublicKey publica) {
         String input = inputFile.getName();
         String extension = input.substring(input.lastIndexOf("."));
