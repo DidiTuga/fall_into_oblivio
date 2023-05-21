@@ -7,6 +7,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -27,6 +30,8 @@ public class hub extends JFrame {
     private String[] algoritmo_hash = {"SHA-256", "SHA-512", "MD5"};
     private String[] tamanho_chave = {"160", "256", "384"};
 
+    private final KeyPair kp;
+
     private int flag_delay = 0;
 
     public hub() {
@@ -43,6 +48,14 @@ public class hub extends JFrame {
         IvParameterSpec[] iv = new IvParameterSpec[2];
         iv[0] = Util.generateIv(16);
         iv[1] = Util.generateIv(8);
+        // Gerar par de chaves RSA
+        try {
+            KeyPairGenerator kpg = KeyPairGenerator.getInstance("DSA");
+            kpg.initialize(2048); // 2048 bits -> 256 bytes
+            kp = kpg.generateKeyPair();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
         // ficheiros cifrados e seus pins
         ArrayList<File> files_crifrados = new ArrayList<>();
         ArrayList<String> filesPin = new ArrayList<>();
@@ -105,14 +118,8 @@ public class hub extends JFrame {
                             filesPin.add(pin);
                             files_crifrados.add(ficheiro_enc);
                             // tirar a extensao do ficheiro
-                            Util.encryptFile(pin, "salt", f, ficheiro_enc, iv, cifra[0], hash[0], tam_chave[0]);
+                            Util.encryptFile(pin, "salt", f, ficheiro_enc, iv, cifra[0], hash[0], tam_chave[0], kp.getPrivate());
                             atualizaLista(pasta);
-
-                            System.out.println("DEBBUG: __ thread");
-                            System.out.println(files_crifrados.size());
-                            System.out.println(filesPin.size());
-                            System.out.println(ficheiros.length);
-
                         }
                     }
                 }
@@ -176,7 +183,7 @@ public class hub extends JFrame {
                     JOptionPane.showMessageDialog(null, "PIN correto!");
                     String novo_nome = valor_selecionado[0].substring(0, valor_selecionado[0].lastIndexOf("."));
                     File ficheiro_enc = new File("FALL-INTO-OBLIVION/" + valor_selecionado[0]);
-                    if (Util.decryptFile(pin, "salt", ficheiro_enc, new File("FALL-INTO-OBLIVION/" + novo_nome), iv)){
+                    if (Util.decryptFile(pin, "salt", ficheiro_enc, new File("FALL-INTO-OBLIVION/" + novo_nome), iv, kp.getPublic())){
                         // remover o ficheiro da lista e o pin
                         flag_delay = 1;
                         for (int i = 0; i < files_crifrados.size(); i++) {
@@ -233,9 +240,10 @@ public class hub extends JFrame {
         });
     }
 
-    // Atualizar a lista de ficheiros
-    // Vai buscar os ficheiros passa os nomes para uma lista
-    // Centraliza o conteudo da lista
+    /**
+     * Função para atualizar a lista de ficheiros apresentados na interface
+     * @param file - Pasta onde estão os ficheiros
+     */
     public void atualizaLista(File file) {
         File[] ficheiros = file.listFiles();
         DefaultListModel<String> lista_ficheiros = new DefaultListModel<>();
@@ -250,8 +258,11 @@ public class hub extends JFrame {
         renderer.setHorizontalAlignment(SwingConstants.CENTER);
     }
 
-    // função para verificar se o ficheiro é ou não para ser cifrado
-    // envia true se for para cifrar e false se não for para cifrar
+    /**
+     * Função para verificar se o ficheiro é ou não para ser cifrado
+     * @param extension - extensão do ficheiro
+     * @return - false se for para cifrar e true se não for para cifrar
+     */
     public boolean verificaFicheiro(String extension) {
         for (String ext : algoritmo_cifras) {
             if (extension.contains(ext)) {
@@ -267,4 +278,3 @@ public class hub extends JFrame {
     }
 
 }
-

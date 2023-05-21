@@ -51,7 +51,7 @@ Cipher Block Chainign (AES-CBC) e Hash MAC Secure Hash Algorithm 256 (HMAC-SHA25
 
 ## Funcionalidades adicionais
 
-- [ ]  substituir os MACs por assinaturas digitais (o programa deve então também permitir
+- [x]  substituir os MACs por assinaturas digitais (o programa deve então também permitir
   gerar as chaves pública e privadas); 4
 - [x]  permitir que o utilizador escolha a cifra a utilizar e o comprimento da chave de cifra; 7
 - [x]  permitir que o utilizador escolha a função de hash a usar; 7
