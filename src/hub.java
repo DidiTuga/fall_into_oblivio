@@ -76,8 +76,12 @@ public class hub extends JFrame {
         setLocationRelativeTo(null);
         setVisible(true);
         // ----------------- PROGRAMA -----------------
-        // criar a thread que vai cifrar os ficheiros
-        // THREAD --------------------------
+        /**
+         * Thread que vai cifrar os ficheiros e atualizar a lista
+         * e verificar se o ficheiro ja esta cifrado
+         * e se algum ficheiro foi adicionado a pasta
+         * Se algum ficheiro for decifrado, atualiza a lista e fica em sleep 15s
+         */
         new Thread(() -> {
             File pasta = new File("FALL-INTO-OBLIVION");
             if (!pasta.exists()) {
@@ -89,7 +93,6 @@ public class hub extends JFrame {
                 File[] ficheiros = pasta.listFiles();
                 assert ficheiros != null;
 
-                // se o numero de ficheiros cifrados *2 for igual ao numero de ficheiros na pasta entao todos os ficheiros estao cifrados
                 int numero_ficheiros = ficheiros.length;
                 int n_cifrados = files_crifrados.size();
                 if (flag_delay== 1){
@@ -106,10 +109,8 @@ public class hub extends JFrame {
                         int ponto = f.getName().lastIndexOf(".");
                         int n = f.getName().length();
                         String under = f.getName().substring(ponto, n);
-                        // para nao cifrar ficheiros que ja estao cifrados ou se são extensoes de ficheiros hash
                         if (verificaFicheiro(under)) {
                         }
-                        // criar o ficheiro.enc e o pin para o ficheiro
                         else {
                             String novoNome = f.getName() + "." + cifra[0] + tam_chave[0];
                             File ficheiro_enc = new File("FALL-INTO-OBLIVION/", novoNome);
@@ -131,9 +132,13 @@ public class hub extends JFrame {
 
             }
         }).start();
-        // -----------------------------------
 
-        // quando clicar num componente da lista
+        /**
+         * Listener para ver o que esta selecionado na lista
+         * e ir buscar o conteudo do ficheiro
+         * e meter no text area
+         * e ativar o botao de decifrar
+         */
         list_ficheiros.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent arg0) {
@@ -161,14 +166,13 @@ public class hub extends JFrame {
                 }
             }
         });
-
+        /**
+         * Botão para desencriptar o ficheiro
+         * Lê o pin, tem 3 tentativas para acertar no pin
+         * Se acertar no pin desencripta o ficheiro e apaga o ficheiro .encriptado e o .hash
+         * Se não acertar no pin ao fim das 3 tentativas apaga o ficheiro .encriptado e o .hash, e o ficheiro original
+         */
         Btn_decipher.addActionListener(e -> {
-            // Ler PIN
-            // Verificar se o PIN está correto maximo de 3 tentativas
-            // Se estiver correto desencriptar o ficheiro
-            // Ao fim das 3 tentativas eliminar o ficheiro
-            // Se o ficheiro for desencriptado com sucesso, apagar o ficheiro .enc e o .hash
-            // Ao fim das 3 tentativas apagar o ficheiro .enc e o .hash
             int count = 0;
             String pin_cor = null;
             for (File file_enc : files_crifrados) {
@@ -184,7 +188,6 @@ public class hub extends JFrame {
                     String novo_nome = valor_selecionado[0].substring(0, valor_selecionado[0].lastIndexOf("."));
                     File ficheiro_enc = new File("FALL-INTO-OBLIVION/" + valor_selecionado[0]);
                     if (Util.decryptFile(pin, "salt", ficheiro_enc, new File("FALL-INTO-OBLIVION/" + novo_nome), iv, kp.getPublic())){
-                        // remover o ficheiro da lista e o pin
                         flag_delay = 1;
                         for (int i = 0; i < files_crifrados.size(); i++) {
                             if (files_crifrados.get(i).getName().equals(valor_selecionado[0])) {
@@ -197,7 +200,6 @@ public class hub extends JFrame {
                     }
                     break;
                 } else {
-                    // se o pin estiver errado 3 vezes elimina os ficheiros
                     if (count == 2) {
                         JOptionPane.showMessageDialog(null, "PIN incorreto! \n Ficheiro eliminado!");
                         File fich_enc = new File("FALL-INTO-OBLIVION/" + valor_selecionado[0]);
@@ -209,7 +211,6 @@ public class hub extends JFrame {
                                 file.delete();
                             }
                         }
-                        // remover o ficheiro da lista e o pin
                         for (int i = 0; i < files_crifrados.size(); i++) {
                             if (files_crifrados.get(i).getName().equals(valor_selecionado[0])) {
                                 files_crifrados.remove(i);
@@ -218,7 +219,7 @@ public class hub extends JFrame {
                         }
                         fich_enc.delete();
 
-                        break; // se o pin estiver incorreto 3 vezes o ficheiro é eliminado
+                        break;
                     } else {
                         count++;
                         JOptionPane.showMessageDialog(null, "PIN incorreto! Tente novamente!");
@@ -228,7 +229,6 @@ public class hub extends JFrame {
             File file = new File("FALL-INTO-OBLIVION");
             atualizaLista(file);
         });
-        // Ir buscar o valor do combobox
         CB_cifra.addActionListener(e -> {
             cifra[0] = CB_cifra.getSelectedItem().toString();
         });

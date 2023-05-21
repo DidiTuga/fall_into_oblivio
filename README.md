@@ -27,18 +27,17 @@ operativo.
 ## Interface gráfica 5
 
 - sistema de login;
-- listar pasta FALL-INTO-OBLIVION;
-- janela para output do conteúdo do ficheiro;
-- botões intuitivos com as diversas funcionalidades.
-- permitir gerar um novo pin.
-- help bar
+  - listar pasta FALL-INTO-OBLIVION;
+  - janela para output do conteúdo do ficheiro;
+  - botões intuitivos com as diversas funcionalidades.
+  - permitir gerar um novo pin.
+  - help bar
 
 ## Funcionalidades Minimas
 
 - [x]  Permitir cifrar ficheiros, guardando o resultado numa pasta chamada FALL-INTO-OBLIVION; (explorar diferentes
   tipos de cifra); 1
-- [x]  calcular o valor de hash do ficheiro, guardando também o resultado junto com o criptograma (em ficheiros
-  separados) (explorar diferentes valores de hash) 1.5
+- [x]  calcular o valor de hash do ficheiro, guardando também o resultado junto com o criptograma (em ficheiros separados) (explorar diferentes valores de hash) 1.5
 - [x]  gerar automaticamente um PIN, e usá-lo como chave para cifrar cada ficheiro;
 - [x]  calcular o MAC dos criptogramas; 2
 - [x]  permitir decifrar o ficheiro por via da adivinhação do PIN. Só devem ser permitidas até 3 tentativas; 3
