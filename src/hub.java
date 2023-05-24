@@ -108,7 +108,7 @@ public class hub extends JFrame implements ActionListener {
         iv[1] = Util.generateIv(8);
         // Gerar par de chaves RSA
         try {
-            KeyPairGenerator kpg = KeyPairGenerator.getInstance("DSA");
+            KeyPairGenerator kpg = KeyPairGenerator.getInstance("DSA"); // DSA -> Digital Signature Algorithm
             kpg.initialize(2048); // 2048 bits -> 256 bytes
             kp = kpg.generateKeyPair();
         } catch (NoSuchAlgorithmException e) {
@@ -130,7 +130,11 @@ public class hub extends JFrame implements ActionListener {
         setSize(800, 800);
         Txt_area.setEditable(false);
         Txt_area.setLineWrap(true);
+        Txt_area.setWrapStyleWord(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // tamanha fixo
+        setResizable(false);
+
         // meter centrada
         setLocationRelativeTo(null);
         setVisible(true);
@@ -143,6 +147,7 @@ public class hub extends JFrame implements ActionListener {
          */
         new Thread(() -> {
             File pasta = new File("FALL-INTO-OBLIVION");
+
             if (!pasta.exists()) {
                 pasta.mkdir();
             }
@@ -154,6 +159,7 @@ public class hub extends JFrame implements ActionListener {
                     try {
                         sleep(15000);
                         atualizaLista(pasta);
+                        Txt_area.setText("");
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
@@ -179,8 +185,10 @@ public class hub extends JFrame implements ActionListener {
                             System.out.println(novoNome + " PIN: " + pin);
                             filesPin.add(pin);
                             files_crifrados.add(ficheiro_enc);
-                            // tirar a extensao do ficheiro
-                            Util.encryptFile(pin, "salt", f, ficheiro_enc, iv, cifra[0], hash[0], tam_chave[0], kp.getPrivate());
+                            // ir buscar o nome do ficheiro ate ao primeiro ponto
+
+                            String salt = f.getName().substring(0, ponto);
+                            Util.encryptFile(pin, Util.gerarStringRandom(salt), f, ficheiro_enc, iv, cifra[0], hash[0], tam_chave[0], kp.getPrivate());
                             atualizaLista(pasta);
                         }
                     }
@@ -248,7 +256,8 @@ public class hub extends JFrame implements ActionListener {
                     JOptionPane.showMessageDialog(null, "PIN correto!");
                     String novo_nome = valor_selecionado[0].substring(0, valor_selecionado[0].lastIndexOf("."));
                     File ficheiro_enc = new File("FALL-INTO-OBLIVION/" + valor_selecionado[0]);
-                    if (Util.decryptFile(pin, "salt", ficheiro_enc, new File("FALL-INTO-OBLIVION/" + novo_nome), iv, kp.getPublic())){
+                    String salt = novo_nome.substring(0, novo_nome.lastIndexOf("."));
+                    if (Util.decryptFile(pin, Util.gerarStringRandom(salt), ficheiro_enc, new File("FALL-INTO-OBLIVION/" + novo_nome), iv, kp.getPublic())){
                         flag_delay = 1;
                         for (int i = 0; i < files_crifrados.size(); i++) {
                             if (files_crifrados.get(i).getName().equals(valor_selecionado[0])) {

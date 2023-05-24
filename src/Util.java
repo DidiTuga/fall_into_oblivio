@@ -12,8 +12,27 @@ import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.util.Base64;
+import java.util.Random;
 
 public class Util {
+    /**
+     * Função para gerar um salt aleatório
+     @param nome - nome do arquivo a ser encriptado que vai ser usado como hash do random
+     @return salt - salt gerado
+     */
+    public static String gerarStringRandom(String nome) {
+        Random random = new Random(nome.hashCode());
+        StringBuilder sb = new StringBuilder(nome);
+
+        // Concatena uma sequência de caracteres aleatórios
+        for (int i = 0; i < 10; i++) {
+            char randomChar = (char) (random.nextInt(26) + 'a');
+            sb.append(randomChar);
+        }
+
+        return sb.toString();
+    }
+
     /**
      * Função para gerar uma chave a partir de uma password e um salt
      *
