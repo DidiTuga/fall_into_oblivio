@@ -90,6 +90,8 @@ public class hub extends JFrame implements ActionListener {
 
         this.setJMenuBar(menuBar);
 
+        selectFileButton.addActionListener(this);
+
         this.setVisible(true);
         // ----------------- VARIAVEIS -----------------
         // guarda o valor
@@ -356,6 +358,20 @@ public class hub extends JFrame implements ActionListener {
         }
         if (e.getSource()== exitItem){
             System.exit(0);
+        }
+        if (e.getSource()== selectFileButton){
+            JFileChooser fileChooser = new JFileChooser();
+
+            int res = fileChooser.showOpenDialog(null);
+
+            if (res == JFileChooser.APPROVE_OPTION) {
+                File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
+                try {
+                    Util.copiarArquivos(file.toPath());
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
         }
     }
 }

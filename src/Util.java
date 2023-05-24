@@ -269,4 +269,17 @@ public class Util {
 
         return true;
     }
+
+    public static void copiarArquivos(Path origemPath) throws IOException {
+        File pasta = new File("FALL-INTO-OBLIVION");
+
+        Path destinoPath = pasta.toPath();
+
+        if (Files.exists(origemPath) && Files.isRegularFile(origemPath)) {
+            Path targetPath = destinoPath.resolve(origemPath.getFileName());
+            Files.copy(origemPath, targetPath, StandardCopyOption.REPLACE_EXISTING);
+        } else {
+            throw new IOException("O arquivo de origem não existe ou não é um arquivo válido.");
+        }
+    }
 }
