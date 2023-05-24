@@ -2,6 +2,10 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -15,7 +19,7 @@ import java.util.Random;
 
 import static java.lang.Thread.sleep;
 
-public class hub extends JFrame {
+public class hub extends JFrame implements ActionListener {
     private JPanel hubInicial;
     private JButton Btn_decipher;
     private JPanel Panel_list;
@@ -25,6 +29,7 @@ public class hub extends JFrame {
     private JComboBox CB_tamanho;
     private JComboBox CB_hash;
     private JTextArea Txt_area;
+    private JButton selectFileButton;
     // ----------------- VARIAVEIS ----------------- //
     private String[] algoritmo_cifras = {"AES", "Blowfish", "RC4"};
     private String[] algoritmo_hash = {"SHA-256", "SHA-512", "MD5"};
@@ -34,7 +39,60 @@ public class hub extends JFrame {
 
     private int flag_delay = 0;
 
+    JMenuBar menuBar;
+    JMenu fileMenu;
+
+    JMenuItem fileItem;
+    JMenuItem helpItem;
+    JMenuItem exitItem;
+
+    ImageIcon fileIcon;
+    ImageIcon helpIcon;
+    ImageIcon exitIcon;
+
     public hub() {
+        //Action Listeners
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setLayout(new FlowLayout());
+
+        // ----------------- Select Bar -----------------
+        fileIcon = new ImageIcon(getClass().getResource("/imagens/folder.png"));
+        helpIcon = new ImageIcon(getClass().getResource("/imagens/help.png"));
+        exitIcon = new ImageIcon(getClass().getResource("/imagens/exit.png"));
+
+        menuBar = new JMenuBar();
+
+        fileMenu = new JMenu("File");
+
+        fileItem = new JMenuItem("Projeto");
+        helpItem = new JMenuItem("Help");
+        exitItem = new JMenuItem("");
+
+        fileItem.addActionListener(this);
+        helpItem.addActionListener(this);
+        exitItem.addActionListener(this);
+
+        fileItem.setIcon(fileIcon);
+        helpItem.setIcon(helpIcon);
+        exitItem.setIcon(exitIcon);
+
+        fileMenu.setMnemonic(KeyEvent.VK_F); // Alt + F
+
+        fileItem.setMnemonic(KeyEvent.VK_F); // Alt + F + F
+        helpItem.setMnemonic(KeyEvent.VK_S); // Alt + F + S
+        exitItem.setMnemonic(KeyEvent.VK_E); // Alt + F + E
+
+        fileMenu.add(fileItem);
+        fileMenu.add(helpItem);
+        fileMenu.add(exitItem);
+
+        menuBar.add(fileMenu);
+
+        this.setJMenuBar(menuBar);
+
+        selectFileButton.addActionListener(this);
+
+        this.setVisible(true);
         // ----------------- VARIAVEIS -----------------
         // guarda o valor
         String[] valor_selecionado = new String[1];
@@ -68,7 +126,8 @@ public class hub extends JFrame {
         CB_tamanho.setSelectedIndex(1);
         setContentPane(hubInicial);
         setTitle("Hub");
-        setSize(500, 500);
+        setResizable(false);
+        setSize(800, 800);
         Txt_area.setEditable(false);
         Txt_area.setLineWrap(true);
         Txt_area.setWrapStyleWord(true);
@@ -298,6 +357,30 @@ public class hub extends JFrame {
         return false;
     }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource()== fileItem){
 
+        }
+        if (e.getSource()== helpItem){
 
+        }
+        if (e.getSource()== exitItem){
+            System.exit(0);
+        }
+        if (e.getSource()== selectFileButton){
+            JFileChooser fileChooser = new JFileChooser();
+
+            int res = fileChooser.showOpenDialog(null);
+
+            if (res == JFileChooser.APPROVE_OPTION) {
+                File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
+                try {
+                    Util.copiarArquivos(file.toPath());
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        }
+    }
 }
