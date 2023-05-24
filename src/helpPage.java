@@ -20,7 +20,9 @@ public class helpPage extends JFrame {
                 "<br>Segue os passos em baixo.</div>" +
                 "<div style='text-align: left; font-size: 16px; margin-left: 5px; font-family: Times New Roman;'>" +
                 "➠ Executa a nossa app, verás todo o conteúdo da pasta 'FALL-INTO-OBLIVION' no JList à esquerda e à direita o seu interior. Poderás também adicionar mais ficheiros a essa pasta através do JButton 'Introduzir Ficheiro';" +
-                "<br>➠ Todos os ficheiros que estão, ou são, introduzidos nessa pasta são automaticamente cifrados com o tipo de cifra AES com comprimento de 256 bytes e o resultado do seu valor de hash (SHA-256), em ficheiros separados;" +
+                "<br>➠ Todos os ficheiros que estão, ou são, introduzidos nesta pasta são automaticamente cifrados com o tipo de cifra AES com comprimento de 256 bytes e o resultado do seu valor de hash (SHA-256), em ficheiros separados;" +
+                "<br>" +
+                "<br>➠ OS FICHEIROS DE HASH ESTÃO REGISTADOS COM ASSINATURAS DIGITAIS PARA AUMENTAR A SEGURANÇA E INTEGRIDADE DOS DADOS." +
                 "<br>" +
                 "<br>➠ Podes agora," +
                 "<br> Selecionar o Tipo de Cifra que pertendes:" +
@@ -30,12 +32,12 @@ public class helpPage extends JFrame {
                 "<br> Selecionar a Função de Hash que pertendes:" +
                 "<br> ↳ SHA-256, SHA-512 ou MD5;" +
                 "<br> " +
-                "<br>➠ NOTA: OS PROCESSOS SERÃO SEMPRE AUTOMATICOS A QUALQUER FICHEIRO INTRODUZIDO, MEDIANTE AS OPÇÕES SELECIONADAS NO MOMENTO." +
+                "<br>➠ NOTA: OS PROCESSOS SERÃO SEMPRE AUTOMÁTICOS A QUALQUER FICHEIRO INTRODUZIDO, MEDIANTE AS OPÇÕES SELECIONADAS NO MOMENTO." +
                 "<br> " +
-                "<br>➠ Olha para a consola, cada ficheiro encriptado tem um PIN, GUARDA-O BEM! Vais precisar dele para desencriptar;" +
-                "<br>➠ Para desencriptar basta selecionar o ficheiro pretendido e clicar no JButton 'Decifrar'; (LEMBRA-TE DO PIN VAIS PRECISAR DELE AGORA)" +
+                "<br>➠ Para cada ficheiro encriptado foi gerado um PIN aleatório de quatro dígitos! Vais precisar dele para desencriptar;" +
+                "<br>➠ Para desencriptar basta selecionar o ficheiro pretendido e clicar no JButton 'Decifrar';" +
                 "<br>" +
-                "<br>➠ Será pedido para introduzires o PIN referente ao ficheiro, dispões de TRÊS TENTATIVAS, se errares o ficheiro é ELIMINADO PARA SEMPRE;" +
+                "<br>➠ Será pedido para introduzires um PIN, dispões de TRÊS TENTATIVAS, se errares o ficheiro é ELIMINADO PARA SEMPRE;" +
                 "<br>" +
                 "<br>➠ Se o PIN estiver correto dispenderás, por segurança, de 15s para visualizar e mover o ficheiro decifrado, após esse tempo o ficheiro será encriptado novamente;" +
                 "<br>" +
