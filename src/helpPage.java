@@ -32,11 +32,17 @@ public class helpPage extends JFrame {
                 "<br> " +
                 "<br>➠ NOTA: OS PROCESSOS SERÃO SEMPRE AUTOMATICOS A QUALQUER FICHEIRO INTRODUZIDO, MEDIANTE AS OPÇÕES SELECIONADAS NO MOMENTO." +
                 "<br> " +
-                "<br> " +
-                "</div></html>");
+                "<br>➠ Olha para a consola, cada ficheiro encriptado tem um PIN, GUARDA-O BEM! Vais precisar dele para desencriptar;" +
+                "<br>➠ Para desencriptar basta selecionar o ficheiro pretendido e clicar no JButton 'Decifrar'; (LEMBRA-TE DO PIN VAIS PRECISAR DELE AGORA)" +
+                "<br>" +
+                "<br>➠ Será pedido para introduzires o PIN referente ao ficheiro, dispões de TRÊS TENTATIVAS, se errares o ficheiro é ELIMINADO PARA SEMPRE;" +
+                "<br>" +
+                "<br>➠ Se o PIN estiver correto dispenderás, por segurança, de 15s para visualizar e mover o ficheiro decifrado, após esse tempo o ficheiro será encriptado novamente;" +
+                "<br>" +
+                "<br>NOTA: NESTA NOVA ENCRIPTAÇÃO, O FICHEIRO SERÁ INCRIPTADO RESPEITANDO AS OPÇÕES SELECIONADAS PELO UTILIZADOR E SERÁ GERADO UM NOVO PIN (i.e, se o utilizador tiver selecionado o Tipo de Cifra 'RC4', será essa a cifra a ser implementada);</div></html>");
 
         // Define o tamanho preferencial do label
-        label.setPreferredSize(new Dimension(696, 800));
+        label.setPreferredSize(new Dimension(690, 1300));
 
         label.setIcon(image);
         label.setHorizontalTextPosition(JLabel.CENTER);

@@ -56,34 +56,34 @@ public class hub extends JFrame implements ActionListener {
         this.setLayout(new FlowLayout());
 
         // ----------------- Select Bar -----------------
-        fileIcon = new ImageIcon(getClass().getResource("/imagens/folder.png"));
         helpIcon = new ImageIcon(getClass().getResource("/imagens/help.png"));
+        fileIcon = new ImageIcon(getClass().getResource("/imagens/folder.png"));
         exitIcon = new ImageIcon(getClass().getResource("/imagens/exit.png"));
 
         menuBar = new JMenuBar();
 
         fileMenu = new JMenu("File");
 
-        fileItem = new JMenuItem("Projeto");
         helpItem = new JMenuItem("Help");
+        fileItem = new JMenuItem("Projeto");
         exitItem = new JMenuItem("");
 
-        fileItem.addActionListener(this);
         helpItem.addActionListener(this);
+        fileItem.addActionListener(this);
         exitItem.addActionListener(this);
 
-        fileItem.setIcon(fileIcon);
         helpItem.setIcon(helpIcon);
+        fileItem.setIcon(fileIcon);
         exitItem.setIcon(exitIcon);
 
         fileMenu.setMnemonic(KeyEvent.VK_F); // Alt + F
 
+        helpItem.setMnemonic(KeyEvent.VK_S); // Alt + F + H
         fileItem.setMnemonic(KeyEvent.VK_F); // Alt + F + F
-        helpItem.setMnemonic(KeyEvent.VK_S); // Alt + F + S
         exitItem.setMnemonic(KeyEvent.VK_E); // Alt + F + E
 
-        fileMenu.add(fileItem);
         fileMenu.add(helpItem);
+        fileMenu.add(fileItem);
         fileMenu.add(exitItem);
 
         menuBar.add(fileMenu);
@@ -359,12 +359,12 @@ public class hub extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource()== fileItem){
-
-        }
         if (e.getSource()== helpItem){
             helpPage helpFrame = new helpPage();
             helpFrame.setVisible(true);
+        }
+        if (e.getSource()== fileItem){
+
         }
         if (e.getSource()== exitItem){
             System.exit(0);
