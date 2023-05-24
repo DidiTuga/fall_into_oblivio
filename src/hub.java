@@ -363,7 +363,8 @@ public class hub extends JFrame implements ActionListener {
 
         }
         if (e.getSource()== helpItem){
-
+            helpPage helpFrame = new helpPage();
+            helpFrame.setVisible(true);
         }
         if (e.getSource()== exitItem){
             System.exit(0);
@@ -383,4 +384,7 @@ public class hub extends JFrame implements ActionListener {
             }
         }
     }
+
+
+
 }

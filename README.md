@@ -31,7 +31,7 @@ operativo.
   - janela para output do conteúdo do ficheiro;
   - botões intuitivos com as diversas funcionalidades.
   - permitir gerar um novo pin.
-  - help bar
+  - helpPage bar
 
 ## Funcionalidades Minimas
 
@@ -54,7 +54,7 @@ Cipher Block Chainign (AES-CBC) e Hash MAC Secure Hash Algorithm 256 (HMAC-SHA25
   gerar as chaves pública e privadas); 4
 - [x]  permitir que o utilizador escolha a cifra a utilizar e o comprimento da chave de cifra; 7
 - [x]  permitir que o utilizador escolha a função de hash a usar; 7
-- [ ]  ter um help completo e intuitivo. 5
+- [ ]  ter um helpPage completo e intuitivo. 5
 
 Pensem numa forma de atacar o sistema (uma falha
 da sua implementação) e dediquem-lhe um pequeno intervalo de tempo na apresentação
