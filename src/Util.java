@@ -7,20 +7,21 @@ import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.util.Base64;
 
 public class Util {
-    // vai gerar uma chave a partir de uma password e um salt SHA : 160, 256, 384
     /**
      * Função para gerar uma chave a partir de uma password e um salt
-     @param password - password para gerar a chave
-     @param salt - salt para gerar a chave
-     @param tamChave - tamanho da chave
-     @param algorithm - algoritmo de encriptacao
-     @return SecretKey - chave gerada
+     *
+     * @param password  - password para gerar a chave
+     * @param salt      - salt para gerar a chave
+     * @param tamChave  - tamanho da chave
+     * @param algorithm - algoritmo de encriptacao
+     * @return SecretKey - chave gerada
      */
     public static SecretKey getKeyFromPassword(String password, String salt, String tamChave, String algorithm)
             throws NoSuchAlgorithmException, InvalidKeySpecException {
@@ -37,8 +38,9 @@ public class Util {
 
     /**
      * Função para gerar um IV aleatório
-     @param ivSize - tamanho do iv
-     @return iv - iv gerado
+     *
+     * @param ivSize - tamanho do iv
+     * @return iv - iv gerado
      */
     public static IvParameterSpec generateIv(int ivSize) {
         byte[] iv = new byte[ivSize];
@@ -48,35 +50,35 @@ public class Util {
 
     /**
      * Função para assinar um hash com uma chave privada
-     * @param hash - hash a ser assinado
+     *
+     * @param hash    - hash a ser assinado
      * @param privada - chave privada
      * @return assinatura - assinatura do hash
      * @throws NoSuchAlgorithmException - algoritmo de assinatura não existe
-     * @throws InvalidKeyException - chave privada inválida
-     * @throws SignatureException - assinatura inválida
+     * @throws InvalidKeyException      - chave privada inválida
+     * @throws SignatureException       - assinatura inválida
      */
     private static byte[] assinar(byte[] hash, PrivateKey privada) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
         Signature assinatura = Signature.getInstance("SHA256withDSA");
         assinatura.initSign(privada);
-        System.out.println("hash:" + Base64.getEncoder().encodeToString(hash));
         assinatura.update(hash);
         return assinatura.sign();
     }
 
     /**
      * Função para verificar a assinatura de um hash com uma chave pública
-     * @param hash - hash a ser verificado
+     *
+     * @param hash       - hash a ser verificado
      * @param assinatura - assinatura do hash
-     * @param publica - chave pública
+     * @param publica    - chave pública
      * @return boolean - true se a assinatura for válida, false caso contrário
      * @throws NoSuchAlgorithmException - algoritmo de assinatura não existe
-     * @throws InvalidKeyException - chave pública inválida
-     * @throws SignatureException - assinatura inválida
+     * @throws InvalidKeyException      - chave pública inválida
+     * @throws SignatureException       - assinatura inválida
      */
     private static boolean verificar(byte[] hash, byte[] assinatura, PublicKey publica) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
         Signature verificacao = Signature.getInstance("SHA256withDSA");
         verificacao.initVerify(publica);
-        System.out.println("hash:" + Base64.getEncoder().encodeToString(hash));
         verificacao.update(hash);
         return verificacao.verify(assinatura);
     }
@@ -86,15 +88,16 @@ public class Util {
      * Criando um arquivo com o hash do arquivo original e assinando o hash com uma chave privada
      * Cifras: AES, Blowfish, RC4
      * tamanhos de chave: 160, 256, 384
-     * @param password - password para gerar a chave
-     * @param salt - salt para gerar a chave
-     * @param inputFile - arquivo a ser encriptado
-     * @param outputFile - arquivo encriptado
-     * @param iv - iv para cada cifra (AES, Blowfish)
-     * @param algorithm - algoritmo de encriptacao
+     *
+     * @param password      - password para gerar a chave
+     * @param salt          - salt para gerar a chave
+     * @param inputFile     - arquivo a ser encriptado
+     * @param outputFile    - arquivo encriptado
+     * @param iv            - iv para cada cifra (AES, Blowfish)
+     * @param algorithm     - algoritmo de encriptacao
      * @param hashAlgorithm - algoritmo de hash
-     * @param tamChave - tamanho da chave
-     * @param privada - chave privada
+     * @param tamChave      - tamanho da chave
+     * @param privada       - chave privada
      */
     public static void encryptFile(String password, String salt, File inputFile, File outputFile, IvParameterSpec[] iv, String algorithm, String hashAlgorithm, String tamChave, PrivateKey privada) {
         try {
@@ -156,6 +159,7 @@ public class Util {
     /**
      * Função para calcular o hash de um arquivo
      * Hash: SHA-256, SHA-512, MD5
+     *
      * @param inputFile - arquivo a ser calculado o hash
      * @param algorithm - algoritmo de hash
      * @return hash - hash do arquivo
@@ -174,12 +178,13 @@ public class Util {
 
     /**
      * Função para decriptar um arquivo com uma chave simétrica e verificar a integridade do arquivo com a assinatura do hash
-     * @param password - password para gerar a chave
-     * @param salt - salt para gerar a chave
-     * @param inputFile - arquivo a ser decriptado
+     *
+     * @param password   - password para gerar a chave
+     * @param salt       - salt para gerar a chave
+     * @param inputFile  - arquivo a ser decriptado
      * @param outputFile - arquivo decriptado
-     * @param iv - iv para cada cifra (AES, Blowfish)
-     * @param publica - chave pública
+     * @param iv         - iv para cada cifra (AES, Blowfish)
+     * @param publica    - chave pública
      * @return boolean - true se a assinatura for válida, false caso contrário
      */
     public static boolean decryptFile(String password, String salt, File inputFile, File outputFile, IvParameterSpec[] iv, PublicKey publica) {
@@ -193,10 +198,10 @@ public class Util {
         String algorithm = extension.substring(1, extension.length() - 3);
         // ir buscar o hash do arquivo original
         File pasta = inputFile.getParentFile();
-        File [] ficheiros = pasta.listFiles();
+        File[] ficheiros = pasta.listFiles();
         File ficheiro_hash = null;
-        for (File file : ficheiros){
-            if (file.getName().contains(nome) && !file.getName().contains(extension)){
+        for (File file : ficheiros) {
+            if (file.getName().contains(nome) && !file.getName().contains(extension)) {
                 ficheiro_hash = file;
                 break;
             }
@@ -238,7 +243,7 @@ public class Util {
             if (outputBytes != null)
                 outputStream.write(outputBytes);
             // Verifica se o hash do arquivo original e igual ao hash do arquivo decriptado
-            String hashAlgorithm = ficheiro_hash.getName().substring(ficheiro_hash.getName().lastIndexOf(".")+1);
+            String hashAlgorithm = ficheiro_hash.getName().substring(ficheiro_hash.getName().lastIndexOf(".") + 1);
             byte[] hash_novo = hashFile(outputFile.toPath(), hashAlgorithm);
 
             // ler o hash do arquivo original do ficheiro hash
@@ -251,7 +256,7 @@ public class Util {
             inputFile.delete();
             outputStream.close();
             // se os hashes forem diferentes, o arquivo foi alterado
-            boolean bool = verificar(hash_novo,  hashOriginal, publica);
+            boolean bool = verificar(hash_novo, hashOriginal, publica);
             if (!bool) {
                 outputFile.delete();
                 return false;
