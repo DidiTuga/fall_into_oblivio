@@ -50,7 +50,7 @@ public class hub extends JFrame {
         iv[1] = Util.generateIv(8);
         // Gerar par de chaves RSA
         try {
-            KeyPairGenerator kpg = KeyPairGenerator.getInstance("DSA");
+            KeyPairGenerator kpg = KeyPairGenerator.getInstance("DSA"); // DSA -> Digital Signature Algorithm
             kpg.initialize(2048); // 2048 bits -> 256 bytes
             kp = kpg.generateKeyPair();
         } catch (NoSuchAlgorithmException e) {
@@ -71,7 +71,11 @@ public class hub extends JFrame {
         setSize(500, 500);
         Txt_area.setEditable(false);
         Txt_area.setLineWrap(true);
+        Txt_area.setWrapStyleWord(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // tamanha fixo
+        setResizable(false);
+
         // meter centrada
         setLocationRelativeTo(null);
         setVisible(true);
@@ -84,25 +88,29 @@ public class hub extends JFrame {
          */
         new Thread(() -> {
             File pasta = new File("FALL-INTO-OBLIVION");
+
             if (!pasta.exists()) {
                 pasta.mkdir();
             }
             atualizaLista(pasta);
 
             while (true) {
-                File[] ficheiros = pasta.listFiles();
-                assert ficheiros != null;
 
-                int numero_ficheiros = ficheiros.length;
-                int n_cifrados = files_crifrados.size();
                 if (flag_delay== 1){
                     try {
                         sleep(15000);
+                        atualizaLista(pasta);
+                        Txt_area.setText("");
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
                     flag_delay = 0;
                 }
+                File[] ficheiros = pasta.listFiles();
+                assert ficheiros != null;
+
+                int numero_ficheiros = ficheiros.length;
+                int n_cifrados = files_crifrados.size();
                 if ((((n_cifrados * 2))== numero_ficheiros) && (numero_ficheiros != 0)){
                 } else {
                     for (File f : ficheiros) {
@@ -118,8 +126,10 @@ public class hub extends JFrame {
                             System.out.println(novoNome + " PIN: " + pin);
                             filesPin.add(pin);
                             files_crifrados.add(ficheiro_enc);
-                            // tirar a extensao do ficheiro
-                            Util.encryptFile(pin, "salt", f, ficheiro_enc, iv, cifra[0], hash[0], tam_chave[0], kp.getPrivate());
+                            // ir buscar o nome do ficheiro ate ao primeiro ponto
+
+                            String salt = f.getName().substring(0, ponto);
+                            Util.encryptFile(pin, Util.gerarStringRandom(salt), f, ficheiro_enc, iv, cifra[0], hash[0], tam_chave[0], kp.getPrivate());
                             atualizaLista(pasta);
                         }
                     }
@@ -187,7 +197,8 @@ public class hub extends JFrame {
                     JOptionPane.showMessageDialog(null, "PIN correto!");
                     String novo_nome = valor_selecionado[0].substring(0, valor_selecionado[0].lastIndexOf("."));
                     File ficheiro_enc = new File("FALL-INTO-OBLIVION/" + valor_selecionado[0]);
-                    if (Util.decryptFile(pin, "salt", ficheiro_enc, new File("FALL-INTO-OBLIVION/" + novo_nome), iv, kp.getPublic())){
+                    String salt = novo_nome.substring(0, novo_nome.lastIndexOf("."));
+                    if (Util.decryptFile(pin, Util.gerarStringRandom(salt), ficheiro_enc, new File("FALL-INTO-OBLIVION/" + novo_nome), iv, kp.getPublic())){
                         flag_delay = 1;
                         for (int i = 0; i < files_crifrados.size(); i++) {
                             if (files_crifrados.get(i).getName().equals(valor_selecionado[0])) {
@@ -248,7 +259,17 @@ public class hub extends JFrame {
         File[] ficheiros = file.listFiles();
         DefaultListModel<String> lista_ficheiros = new DefaultListModel<>();
         for (File file1 : ficheiros) {
-            lista_ficheiros.addElement(file1.getName());
+            String extension = file1.getName().substring(file1.getName().lastIndexOf(".") + 1);
+            // nao apresentar os ficheiros hash
+            int i_flag = 0;
+            for(String ext : algoritmo_hash){
+                if(extension.equals(ext)){
+                    i_flag = 1;
+                }
+            }
+            if(i_flag == 0){
+                lista_ficheiros.addElement(file1.getName());
+            }
         }
         list_ficheiros.setModel(lista_ficheiros);
         list_ficheiros.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -276,5 +297,7 @@ public class hub extends JFrame {
         }
         return false;
     }
+
+
 
 }

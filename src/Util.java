@@ -11,9 +11,29 @@ import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.util.Base64;
+import java.util.Random;
 
 public class Util {
-    // vai gerar uma chave a partir de uma password e um salt SHA : 160, 256, 384
+
+    /**
+     * Função para gerar um salt aleatório
+     @param nome - nome do arquivo a ser encriptado que vai ser usado como hash do random
+     @return salt - salt gerado
+     */
+    public static String gerarStringRandom(String nome) {
+        Random random = new Random(nome.hashCode());
+        StringBuilder sb = new StringBuilder(nome);
+
+        // Concatena uma sequência de caracteres aleatórios
+        for (int i = 0; i < 10; i++) {
+            char randomChar = (char) (random.nextInt(26) + 'a');
+            sb.append(randomChar);
+        }
+
+        return sb.toString();
+    }
+
+
     /**
      * Função para gerar uma chave a partir de uma password e um salt
      @param password - password para gerar a chave
@@ -58,7 +78,6 @@ public class Util {
     private static byte[] assinar(byte[] hash, PrivateKey privada) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
         Signature assinatura = Signature.getInstance("SHA256withDSA");
         assinatura.initSign(privada);
-        System.out.println("hash:" + Base64.getEncoder().encodeToString(hash));
         assinatura.update(hash);
         return assinatura.sign();
     }
@@ -76,7 +95,6 @@ public class Util {
     private static boolean verificar(byte[] hash, byte[] assinatura, PublicKey publica) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
         Signature verificacao = Signature.getInstance("SHA256withDSA");
         verificacao.initVerify(publica);
-        System.out.println("hash:" + Base64.getEncoder().encodeToString(hash));
         verificacao.update(hash);
         return verificacao.verify(assinatura);
     }
