@@ -258,16 +258,26 @@ public class hub extends JFrame implements ActionListener {
                     String novo_nome = valor_selecionado[0].substring(0, valor_selecionado[0].lastIndexOf("."));
                     File ficheiro_enc = new File("FALL-INTO-OBLIVION/" + valor_selecionado[0]);
                     String salt = novo_nome.substring(0, novo_nome.lastIndexOf("."));
-                    if (Util.decryptFile(pin, Util.gerarStringRandom(salt), ficheiro_enc, new File("FALL-INTO-OBLIVION/" + novo_nome), iv, kp.getPublic())){
-                        flag_delay = 1;
-                        for (int i = 0; i < files_crifrados.size(); i++) {
-                            if (files_crifrados.get(i).getName().equals(valor_selecionado[0])) {
-                                files_crifrados.remove(i);
-                                filesPin.remove(i);
+                    try {
+                        if (Util.decryptFile(pin, Util.gerarStringRandom(salt), ficheiro_enc, new File("FALL-INTO-OBLIVION/" + novo_nome), iv, kp.getPublic())){
+                            flag_delay = 1;
+                            for (int i = 0; i < files_crifrados.size(); i++) {
+                                if (files_crifrados.get(i).getName().equals(valor_selecionado[0])) {
+                                    files_crifrados.remove(i);
+                                    filesPin.remove(i);
+                                }
+                            }
+                        }else{
+                            JOptionPane.showMessageDialog(null, "Ficheiro corrompido!", "Erro", JOptionPane.ERROR_MESSAGE);
+                            for (int i = 0; i < files_crifrados.size(); i++) {
+                                if (files_crifrados.get(i).getName().equals(valor_selecionado[0])) {
+                                    files_crifrados.remove(i);
+                                    filesPin.remove(i);
+                                }
                             }
                         }
-                    }else{
-                        JOptionPane.showMessageDialog(null, "Ficheiro corrompido!", "Erro", JOptionPane.ERROR_MESSAGE);
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
                     }
                     break;
                 } else {
