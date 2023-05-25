@@ -34,7 +34,7 @@ public class helpPage extends JFrame {
                 "<br> " +
                 "<br>➠ NOTA: OS PROCESSOS SERÃO SEMPRE AUTOMÁTICOS A QUALQUER FICHEIRO INTRODUZIDO, MEDIANTE AS OPÇÕES SELECIONADAS NO MOMENTO." +
                 "<br> " +
-                "<br>➠ Para cada ficheiro encriptado foi gerado um PIN aleatório de quatro dígitos! Vais precisar dele para desencriptar;" +
+                "<br>➠ Para cada ficheiro encriptado foi gerado um PIN numérico aleatório de quatro dígitos! Vais precisar dele para desencriptar;" +
                 "<br>➠ Para desencriptar basta selecionar o ficheiro pretendido e clicar no JButton 'Decifrar';" +
                 "<br>" +
                 "<br>➠ Será pedido para introduzires um PIN, dispões de TRÊS TENTATIVAS, se errares o ficheiro é ELIMINADO PARA SEMPRE;" +
