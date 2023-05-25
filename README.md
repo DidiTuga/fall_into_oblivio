@@ -1,76 +1,68 @@
+# ![Header](src/imagens/header.png)
 # Projeto - FALL-INTO-OBLIVION
+<table>
+<tr>
+<td>
+  O objetivo principal deste projeto é construir uma aplicação que simule a funcionalidade do
+Recycle Bin dos sistemas operativos modernos, mas de uma forma alternativa pouco convencional.
+</td>
+</tr>
+</table>
 
-Trabalho realizado para a unidade Curricular, Segurança Informática.
 
-## ENTREGA: 23:55 do dia 26/05/2023
+## Repositório GitHub
+Após a entrega deste projeto ficará publico :  https://github.com/DidiTuga/fall_into_oblivio
 
-Os ficheiros devem ter,**contudo**, ter uma nomenclatura semelhante à que se segue (considere que T3 significa proposta
-de Trabalho 3, que veio a ser desenvolvida pelos alunos Ricardo, Rita e Raúl):
 
-- código python () - .py → T3-Ricardo-Rita-Raul-code.py
-- diagrama de ataque () - .png → T3-Ricardo-Rita-Raul-attack-diagram.png
-- diagrama de sistema () - .jpg → T3-Ricardo-Rita-Raul-system-diagram.jpg
-- executavel () - .exe → T3-Ricardo-Rita-Raul.exe
-- código e outros artefactos () - .zip → T3-Ricardo-Rita-Raul.zip
+## Aplicação
 
-## Resumo do Trabalho
+### Página Principal
+Nesta página poderás interagir com todas as funcionalidades oferecidas pela nossa aplicação.
 
-A aplicação a desenvolver deve estar constantemente a monitorizar uma pasta chamada FALL-INTO-OBLIVION, e cifrar
-automaticamente todos os ficheiros que aí forem colocados. Deve também calcular um valor resumo, um Message
-Authentication
-Code (MAC) ou uma assinatura digital do ficheiro. A chave usada para cifrar o ficheiro e calcular o MAC deve ser gerada
-automaticamente para cada ficheiro, mas derivada de um Personal Identification Number (PIN) de 3 ou 4 dígitos. Se um
-utilizador desejar reaver o seu ficheiro mais tarde, tem de adivinhar o código com que foi cifrado e autenticado. Tem 3
-hipóteses para conseguir decifrar o ficheiro. Depois dessas 3 tentativas, o ficheiro deve ser eliminado do sistema
-operativo.
+![](src/imagens/principalPage.png)
 
-## Interface gráfica 5
+### Página de Ajuda
+Aqui encontras, passo a passo, tudo o que precisas para trabalhar no nosso software.
+![](src/imagens/ajudaPage.png)
 
-- sistema de login;
-  - listar pasta FALL-INTO-OBLIVION;
-  - janela para output do conteúdo do ficheiro;
-  - botões intuitivos com as diversas funcionalidades.
-  - permitir gerar um novo pin.
-  - helpPage bar
+### Como usar executar App?
 
-## Funcionalidades Minimas
+- O executável encontra-se na pasta `dist` com o nome `FallIntoOblivion.jar`
+- Executa a app
+- Desfruta e Diverte-te
+
+## Documentação
+
+- [Java Swing](https://docs.oracle.com/javase%2F7%2Fdocs%2Fapi%2F%2F/javax/swing/package-summary.html)
+- [Java AES Encryption](https://www.baeldung.com/java-aes-encryption-decryption)
+
+
+## Team
+
+[![Diogo Santos](https://avatars.githubusercontent.com/u/96886187?s=100&v=4)](https://github.com/DidiTuga)| [![Luis]()](https://github.com/luis-sa-ubi-2000) | [![Luís Santos](https://avatars.githubusercontent.com/u/99278985?s=100&v=4)](https://github.com/lsantos92) |[![Tiago Barreiros](https://avatars.githubusercontent.com/u/78179371?s=100&v=4)](https://github.com/tiago-barreiros)|[![Xavier Tacanho]()](https://github.com/XavierTacanho)
+---|--------------------------------------------------|------------------------------------------------------------------------------------------------------------|---|---
+[Diogo Santos](https://github.com/DidiTuga)| [Luís Sá](https://github.com/luis-sa-ubi-2000)   | [Luís Santos](https://github.com/lsantos92)                                                                |[Tiago Barreiros](https://github.com/tiago-barreiros)|[Xavier Tacanho](https://github.com/XavierTacanho)
+
+# Orientação
+## [Pedro Inácio](https://www.di.ubi.pt/~inacio/)
+
+## Objetivos
+### Funcionalidades Minimas
 
 - [x]  Permitir cifrar ficheiros, guardando o resultado numa pasta chamada FALL-INTO-OBLIVION; (explorar diferentes
-  tipos de cifra); 1
-- [x]  calcular o valor de hash do ficheiro, guardando também o resultado junto com o criptograma (em ficheiros separados) (explorar diferentes valores de hash) 1.5
-- [x]  gerar automaticamente um PIN, e usá-lo como chave para cifrar cada ficheiro;
-- [x]  calcular o MAC dos criptogramas; 2
-- [x]  permitir decifrar o ficheiro por via da adivinhação do PIN. Só devem ser permitidas até 3 tentativas; 3
-- [x]  verificar a integridade do ficheiro no caso do PIN ter sido adivinhado. 3
+  tipos de cifra);
+- [x]  Calcular o valor de hash do ficheiro, guardando também o resultado junto com o criptograma (em ficheiros separados) (explorar diferentes valores de hash)
+- [x]  Gerar automaticamente um PIN, e usá-lo como chave para cifrar cada ficheiro;
+- [x]  Calcular o MAC dos criptogramas;
+- [x]  Permitir decifrar o ficheiro por via da adivinhação do PIN. Só devem ser permitidas até 3 tentativas;
+- [x]  Verificar a integridade do ficheiro no caso do PIN ter sido adivinhado;
+- [x]  Correr em modo modo Client Line Interface (CLI) ou em modo gráfico.
 
-Pode correr em modo modo Client Line Interface (CLI) ou em modo gráfico (fica ao
-critério dos executantes).
-Devem usar cifras e mecanismos de autenticação de mensagens de qualidade (e.g., Advanced Encryption Standard em modo
-Cipher Block Chainign (AES-CBC) e Hash MAC Secure Hash Algorithm 256 (HMAC-SHA256)).
+### Funcionalidades adicionais
 
-## Funcionalidades adicionais
-
-- [x]  substituir os MACs por assinaturas digitais (o programa deve então também permitir
-  gerar as chaves pública e privadas); 4
-- [x]  permitir que o utilizador escolha a cifra a utilizar e o comprimento da chave de cifra; 7
-- [x]  permitir que o utilizador escolha a função de hash a usar; 7
-- [ ]  ter um helpPage completo e intuitivo. 5
-
-Pensem numa forma de atacar o sistema (uma falha
-da sua implementação) e dediquem-lhe um pequeno intervalo de tempo na apresentação
-
-## Fazer um programa de ataque para o login e pin 6
-
-* Gerar varios pins com 4 digitos para tentar o pin
-
-Apresentação-Point 8
-
-## DISTRIBUIÇÃO DE TAREFAS:
-
-TIAGO: 5
-Luis sá: 2
-Diogo: 1, 7
-Luis Santos:  3
-Xavier: 4
-6 para o fim
-8 toda a gente
+- [x]  Substituir os MACs por assinaturas digitais (o programa deve então também permitir
+  gerar as chaves pública e privadas);
+- [x]  Permitir que o utilizador escolha a cifra a utilizar e o comprimento da chave de cifra;
+- [x]  Permitir que o utilizador escolha a função de hash a usar;
+- [x]  Ter um helpPage completo e intuitivo.
+## *Segurança Informática* @[Universidade da Beira Interior](https://www.ubi.pt/).
