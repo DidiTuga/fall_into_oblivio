@@ -1,3 +1,16 @@
+/**
+ * @file helpPage.java
+ * @brief Declaração da interface gráfica e respetivas funções, referentes à página de ajuda.
+ * @version 1.0.1
+ * @date 23/05/2023
+ * @bugs No known bugs.
+ * @author Diogo Santos, a45842
+ * @author Luís Sá, a46753
+ * @author Luís Santos, a30646
+ * @author Tiago Barreiros, a46118
+ * @author Xavier Tacanho, a45930
+ */
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -51,7 +64,7 @@ public class helpPage extends JFrame {
         label.setVerticalTextPosition(JLabel.TOP);
         label.setForeground(new Color(0x00FF00));
         label.setFont(new Font("Impact", Font.PLAIN, 26));
-        label.setIconTextGap(-25);
+        label.setIconTextGap(-25); //distancia que está da imagem
         label.setBackground(Color.BLACK);
         label.setOpaque(true);
         label.setBorder(border);

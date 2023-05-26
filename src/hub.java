@@ -1,3 +1,16 @@
+/**
+ * @file hub.java
+ * @brief Declaração da interface gráfica e respetivas funções.
+ * @version 1.0.1
+ * @date 03/04/2023
+ * @bugs Desformatação do texto apresentado no JTextArea quando o seu conteúdo é bastante extenso.
+ * @author Diogo Santos, a45842
+ * @author Luís Sá, a46753
+ * @author Luís Santos, a30646
+ * @author Tiago Barreiros, a46118
+ * @author Xavier Tacanho, a45930
+ */
+
 import javax.crypto.spec.IvParameterSpec;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -40,6 +53,7 @@ public class hub extends JFrame implements ActionListener {
 
     private int flag_delay = 0;
 
+    // ----------------- HELP PAGE ----------------- //
     JMenuBar menuBar;
     JMenu fileMenu;
 
@@ -368,11 +382,17 @@ public class hub extends JFrame implements ActionListener {
         return false;
     }
 
+    /**
+     * Função de Mapeamento da OPCIONS BAR
+     * @param e - evento que ocorre quando se clica numa das opções
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource()== fileItem){
+            // procura o PATH da pasta
             File pasta = new File("FALL-INTO-OBLIVION");
 
+            // abre a pasta
             try {
                 Desktop.getDesktop().open(pasta);
             } catch (IOException ex) {
@@ -391,6 +411,8 @@ public class hub extends JFrame implements ActionListener {
 
             int res = fileChooser.showOpenDialog(null);
 
+            // res = 0 se o ficheiro não for selecionado
+            // res = 1 se o ficheiro for selecionado
             if (res == JFileChooser.APPROVE_OPTION) {
                 File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
                 try {
