@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="fall_into_oblivio:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/fall_into_oblivio_jar</output-path>
+    <root id="archive" name="fall_into_oblivio.jar">
+      <element id="module-output" name="fall_into_oblivio" />
+    </root>
+  </artifact>
+</component>
