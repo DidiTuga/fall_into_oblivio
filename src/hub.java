@@ -11,7 +11,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
@@ -146,6 +145,7 @@ public class hub extends JFrame implements ActionListener {
          * e se algum ficheiro foi adicionado a pasta
          * Se algum ficheiro for decifrado, atualiza a lista e fica em sleep 15s
          */
+
         new Thread(() -> {
             File pasta = new File("FALL-INTO-OBLIVION");
 
@@ -209,6 +209,7 @@ public class hub extends JFrame implements ActionListener {
          * e meter no text area
          * e ativar o botao de decifrar
          */
+
         list_ficheiros.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent arg0) {
@@ -242,6 +243,7 @@ public class hub extends JFrame implements ActionListener {
          * Se acertar no pin desencripta o ficheiro e apaga o ficheiro .encriptado e o .hash
          * Se não acertar no pin ao fim das 3 tentativas apaga o ficheiro .encriptado e o .hash, e o ficheiro original
          */
+
         Btn_decipher.addActionListener(e -> {
             int count = 0;
             String pin_cor = null;
@@ -325,6 +327,7 @@ public class hub extends JFrame implements ActionListener {
      * Função para atualizar a lista de ficheiros apresentados na interface
      * @param file - Pasta onde estão os ficheiros
      */
+
     public void atualizaLista(File file) {
         File[] ficheiros = file.listFiles();
         DefaultListModel<String> lista_ficheiros = new DefaultListModel<>();
@@ -401,7 +404,4 @@ public class hub extends JFrame implements ActionListener {
             }
         }
     }
-
-
-
 }

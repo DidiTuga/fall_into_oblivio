@@ -5,7 +5,10 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -57,8 +60,6 @@ public class Util {
         if (tamanho == 384) {
             tamanho = 256;
         }
-
-
 
         KeySpec spec = new PBEKeySpec(password.toCharArray(), salt.getBytes(), 65536, tamanho);
         return new SecretKeySpec(factory.generateSecret(spec).getEncoded(), algorithm);
@@ -220,6 +221,7 @@ public class Util {
      * @param publica    - chave pública
      * @return boolean - true se a assinatura for válida, false caso contrário
      */
+
     public static boolean decryptFile(String password, String salt, File inputFile, File outputFile, IvParameterSpec[] iv, PublicKey publica)throws IOException {
         String input = inputFile.getName();
         String extension = input.substring(input.lastIndexOf("."));
@@ -293,7 +295,7 @@ public class Util {
             boolean bool = verificar(hash_novo, hashOriginal, publica);
             if (!bool) {
                 outputFile.delete();
-                System.out.println("Arquivo foi alterado");
+                System.out.println("O Ficheiro foi alterado");
                 return false;
             }
         } catch (IllegalBlockSizeException e) {
@@ -302,11 +304,11 @@ public class Util {
             outputStream.close();
             outputFile.delete();
             ficheiro_hash.delete();
-            System.out.println("Arquivo foi alterado");
+            System.out.println("O Ficheiro foi alterado");
             return false;
 
         } catch (Exception e) {
-            System.out.println("Erro ao decriptar o arquivo");
+            System.out.println("Erro ao decriptar o ficheiro");
             System.out.println(e);
         }
         return true;
@@ -317,6 +319,7 @@ public class Util {
      * @param origemPath caminho do arquivo a ser copiado
      * @throws IOException pode lançar uma exceção caso o arquivo não exista ou não seja um arquivo válido
      */
+
     public static void copiarArquivos(Path origemPath) throws IOException {
         File pasta = new File("FALL-INTO-OBLIVION");
 
@@ -326,7 +329,7 @@ public class Util {
             Path targetPath = destinoPath.resolve(origemPath.getFileName());
             Files.copy(origemPath, targetPath, StandardCopyOption.REPLACE_EXISTING);
         } else {
-            throw new IOException("O arquivo de origem não existe ou não é um arquivo válido.");
+            throw new IOException("O ficheiro de origem não existe ou não é um arquivo válido.");
         }
     }
 }
